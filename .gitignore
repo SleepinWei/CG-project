@@ -29,3 +29,7 @@
 *.exe
 *.out
 *.app
+
+#.vs file 
+.vs/
+Debug/
