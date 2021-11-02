@@ -1,5 +1,3 @@
-﻿  main.cpp
-  Shader.cpp
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Shader.cpp(99,93): error C2572: “Shader::Shader”: 重定义默认参数 : 参数 1
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Shader.cpp(22): message : 参见“Shader::Shader”的声明
-  正在生成代码...
+﻿  glad.c
+  main.cpp
+  CG.vcxproj -> D:\IT\ComputerGraphics\Course\Project\Forza\Debug\Project.exe
