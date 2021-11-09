@@ -18,3 +18,6 @@ void createWindowOrSomethingElse();
 +   MACRO and enum type:
 `define DEFINE_SOME_MACRO`
 `enum defineSomeEnum{ENUM_ONE,ENUM_TWO,ENUM_THREE}`
++   shaders: 
+    +   vertex shader:`filename.vs`
+    +   fragment shader:`filename.fs`
