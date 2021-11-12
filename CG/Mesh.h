@@ -6,6 +6,7 @@
 #include<string>
 #include<vector>
 
+
 #define MAX_BONE_INFLUENCE 4
 
 struct Vertex {
@@ -19,6 +20,10 @@ struct Vertex {
 	//weights from each bone
 	float m_Weights[MAX_BONE_INFLUENCE];
 };
+
+/*
+* type: texture_specular,texture_diffuse,texture_height,texture_normal
+*/
 struct Texture {
 	unsigned int id;
 	std::string type;
@@ -31,6 +36,7 @@ public:
     std::vector<unsigned int> indices;
     std::vector<Texture>      textures;
     unsigned int VAO;
+    Shader* registeredShader;
 
     // constructor
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
@@ -44,8 +50,9 @@ public:
     }
 
     // render the mesh
-    void Draw(Shader& shader)
+    void Draw()
     {
+        Shader& shader = *registeredShader;
         // bind appropriate textures
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;
@@ -79,6 +86,11 @@ public:
 
         // always good practice to set everything back to defaults once configured.
         glActiveTexture(GL_TEXTURE0);
+    }
+
+    //register a shader to the mesh 
+    void registerShader(Shader& shader) {
+        registeredShader = &shader; 
     }
 
 private:
