@@ -2,9 +2,34 @@
 #define OBJECT_H
 
 #include "Model.h"
-
+#include<bullet/btBulletCollisionCommon.h>
+#include<bullet/btBulletDynamicsCommon.h>
 class PhysicsModel {
-	//bind bullet shapes here 
+	//all kinds of mysterious things in bullet 
+
+	//some attributes here 
+	btScalar mass;
+	bool isDynamic;
+	btVector3 localInertia;
+	//info necessary for construct info: including mass,isDynamic etc. 
+	btRigidBody::btRigidBodyConstructionInfo* modelInfo;
+	btRigidBody* body; 
+
+	btTransform modelTransfrom; 
+	//setIdentity() 
+	//setOrigin() 
+	void setMass(btScalar mass) {
+		mass = mass;
+	}
+	void setDynamic(bool dynamic) {
+		isDynamic = dynamic;
+	}
+	void setLocalInertia(btVector3 inertia) {
+		localInertia = inertia;
+	}
+	void registerRigidBody() {
+
+	}
 };
 
 
