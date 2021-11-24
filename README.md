@@ -1,5 +1,7 @@
-# CG-project
-Our course project of Computer Graphics 
+# CG-project 
+This repo is our course project of Computer Graphics   
+As team members love racing games, we reach agreement on this topic.   
+This project is based on opengl4.x with glfw and glad. 
 ## Group Members 
 Special thanks to my dear teammates! 
 +  zyw @SleepinWei 
@@ -9,10 +11,13 @@ Special thanks to my dear teammates!
 +  yhw @ 
 +  fx @ 
 ## Structure 
-
++  shader 
+    +  shadow_mapping
+    +  pcss
 ## Plans 
 - [ ] Terrain 
-- [ ] Shadows (PCF,PCSS) 
+- [ ] Shadows (PCF,PCSS)
+- [ ] Cascaded Shadow Mapping   
 - [ ] imGui 
 - [ ] 3D model 
 - [ ] Controlling 
