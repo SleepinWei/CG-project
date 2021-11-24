@@ -33,3 +33,5 @@
 #.vs file 
 .vs/
 tempfile/
+*.cfg
+x64/*
