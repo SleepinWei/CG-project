@@ -111,6 +111,8 @@ int main() {
     Shader shader("../shader/shadow_mapping.vs", "../shader/shadow_mapping.fs");
     Shader simpleDepthShader("../shader/shadow_mapping_depth.vs", "../shader/shadow_mapping_depth.fs");
     Shader debugDepthQuad("../shader/debug_quad.vs", "../shader/debug_quad_depth.fs");
+    Model ourModel("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
+
 
 	//settings 
     float planeVertices[] = {
@@ -246,6 +248,9 @@ int main() {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, depthMap);
         renderScene(shader);
+        // models 
+        ourModel.Draw(shader);
+        //
 
         // render Depth map to quad for visual debugging
         // ---------------------------------------------

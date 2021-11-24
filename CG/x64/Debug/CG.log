@@ -1,12 +1,1 @@
-﻿  main.cpp
-D:\IT\ComputerGraphics\Course\Project\Forza\include\shader\Shader.h(88,36): warning C4101: “e”: 未引用的局部变量
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Mesh.h(84,1): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\main.cpp(188,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\main.cpp(295,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\main.cpp(296,11): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\main.cpp(300,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\main.cpp(301,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\main.cpp(303,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\main.cpp(304,10): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\main.cpp(313,28): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-  CG.vcxproj -> D:\IT\ComputerGraphics\Course\Project\Forza\x64\Debug\Project.exe
+﻿  CG.vcxproj -> D:\IT\ComputerGraphics\Course\Project\Forza\x64\Debug\Project.exe
