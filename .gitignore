@@ -35,3 +35,4 @@
 tempfile/
 *.cfg
 x64/*
+resources/objects/

@@ -11,6 +11,10 @@
 #include<shader/Shader.h>
 #define STB_IMAGE_IMPLEMENTATION
 #include"stb_image.h"
+#include"../include/imgui/imgui_impl_glfw.h"
+//#include"../include/imgui/imgui_impl_glfw.h"
+#include"../include/imgui/imgui.h"
+#include"../include/imgui/imgui_impl_opengl3.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -71,8 +75,8 @@ void renderScene(const Shader& shader);
 #define TEST_OBJ
 #ifdef TEST_OBJ
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1600;
+const unsigned int SCR_HEIGHT = 1200;
 
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
 float lastX = SCR_WIDTH / 2.0f;
@@ -89,13 +93,28 @@ glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 //plane 
 unsigned int planeVAO;
 #endif
+void imGuiInit(GLFWwindow* window) {
+    //imgui
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    //enable keyboard controls 
+    //enable gamepad controls 
+    ImGui::StyleColorsDark();
 
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 150");
+
+    bool show_demo_window = true;
+    bool show_another_window = false;
+    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
+}
 int main() {
 	glfwInit();
 
 	//create a window
 	GLFWwindow* window;
-	createWindow(window, 800, 600);
+	createWindow(window, SCR_WIDTH,SCR_HEIGHT);
 	glfwMakeContextCurrent(window);
 	
 	//set Viewport
@@ -105,15 +124,18 @@ int main() {
 	gladInit();
     glEnable(GL_DEPTH_TEST);
 
+    //init GUI 
+    imGuiInit(window);
+
 #ifdef TEST_OBJ
 	//Shader lightingShader("../shader/multiple_cube.vs", "../shader/multiple_cube.fs");
 	//Shader lightCubeShader("../shader/light_cube.vs", "../shader/light_cube.fs");
-    Shader shader("../shader/shadow_mapping.vs", "../shader/shadow_mapping.fs");
+    //Shader shader("../shader/shadow_mapping.vs", "../shader/shadow_mapping.fs");
     Shader simpleDepthShader("../shader/shadow_mapping_depth.vs", "../shader/shadow_mapping_depth.fs");
     Shader debugDepthQuad("../shader/debug_quad.vs", "../shader/debug_quad_depth.fs");
-    Model ourModel("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
-
-
+    //Model ourModel("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
+    Shader pcssShader("../shader/shadow_mapping.vs", "../shader/pcss.fs");
+    Shader lightShader("../shader/light.vs", "../shader/light.fs");
 	//settings 
     float planeVertices[] = {
         // positions            // normals         // texcoords
@@ -173,9 +195,9 @@ int main() {
 
     // shader configuration
     // --------------------
-    shader.use();
-    shader.setInt("diffuseTexture", 0);
-    shader.setInt("shadowMap", 1);
+    pcssShader.use();
+    pcssShader.setInt("diffuseTexture", 0);
+    pcssShader.setInt("shadowMap", 1);
     debugDepthQuad.use();
     debugDepthQuad.setInt("depthMap", 0);
 
@@ -208,9 +230,10 @@ int main() {
         lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
         lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
         lightSpaceMatrix = lightProjection * lightView;
-        // render scene from light's point of view
+        
         simpleDepthShader.use();
         simpleDepthShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+        // render scene from light's point of view
 
         //¿ªÆôÕýÃæÌÞ³ý
         glCullFace(GL_FRONT);
@@ -220,36 +243,54 @@ int main() {
         glClear(GL_DEPTH_BUFFER_BIT);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, woodTexture);
+        //renderScene(simpleDepthShader);
         renderScene(simpleDepthShader);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         //reset face culling 
         glCullFace(GL_BACK);
 
-        // reset viewport
-        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
         // 2. render scene as normal using the generated depth/shadow map  
         // --------------------------------------------------------------
         glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        shader.use();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
-        shader.setMat4("projection", projection);
-        shader.setMat4("view", view);
+        //shader.setMat4("projection", projection);
+        //shader.setMat4("view", view);
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, lightPos);
+        model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
+        lightShader.use();
+        lightShader.setMat4("model", model);
+        lightShader.setMat4("projection", projection);
+        lightShader.setMat4("view", view);
+        renderCube();
+
+        pcssShader.use();
+        pcssShader.setMat4("lightView", lightView);
+
+        pcssShader.setMat4("projection", projection);
+        pcssShader.setMat4("view", view);
+
         // set light uniforms
-        shader.setVec3("viewPos", camera.Position);
-        shader.setVec3("lightPos", lightPos);
-        shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+        pcssShader.setVec3("viewPos", camera.Position);
+        pcssShader.setVec3("lightPos", lightPos);
+        pcssShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, woodTexture);
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, depthMap);
-        renderScene(shader);
+
+        glm::vec2 lightSize = glm::vec2(5.f, 5.f);
+        pcssShader.setVec2("lightSize", lightSize);
+        //float zNear = 10.0f;
+        //pcssShader.setFloat("zNear", 0.01f);
+        renderScene(pcssShader);
+        //pcss Test
+
         // models 
-        ourModel.Draw(shader);
+        //ourModel.Draw(shader);
         //
 
         // render Depth map to quad for visual debugging
@@ -280,7 +321,7 @@ void processInput(GLFWwindow* window)
 		camera.ProcessKeyboard(LEFT, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
-}
+}   
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
