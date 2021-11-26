@@ -31,8 +31,8 @@
 *.app
 
 #.vs file 
-# .vs/
+.vs/
 tempfile/
 *.cfg
-x64/*
+# x64/*
 resources/objects/

@@ -42,53 +42,53 @@ uniform vec3 viewPos;
 uniform vec2 lightSize; //define light size(rectangle)
 uniform mat4 lightView; 
 uniform float zNear = 1.0;  //z coordinate of Shadow Map plane 
-uniform vec2 planeSize = vec2(10.0,10.0);
+uniform vec2 planeSize = vec2(20.0,20.0);
 
 float ShadowCalculation(vec4 fragPosLightSpace,float bias)
 {
     //1. blocker search: find average depth in a blocker
     // vec4 lightSpaceQuaterion= lightView * vec4(fs_in.FragPos,1.0);
     vec3 lightSpacePosition = vec3(lightView * vec4(fs_in.FragPos,1.0));
-    // lightSpacePosition = 0.5 * lightSpacePosition + 0.5; 
-
-    // vec3 projCoords = fragPosLightSpace.xyz/fragPosLightSpace.w;
     
-    // if(projCoords.z > 1.0)
-    //     return 0.0;
+    vec3 projCoords = fragPosLightSpace.xyz/fragPosLightSpace.w;
+    projCoords = projCoords * 0.5 + 0.5 ;
+    if(projCoords.z > 1.0)
+        return 0.0;
 
-    // vec2 blockerSize = lightSize/lightSpacePosition.z * (lightSpacePosition.z - zNear);    
-    // vec2 texelSize = 1.0/textureSize(shadowMap,0);
-    // float blockerDepth= 0.0;
+    vec2 blockerSize = lightSize/lightSpacePosition.z * (lightSpacePosition.z - zNear);    
+    vec2 texelSize = 1.0/textureSize(shadowMap,0);
+    float blockerDepth= 0.0;
     float shadow = 0.0;
 
-    // float blockers = 0.0;
-    // for(int i = 0;i<SAMPLE_SIZE;i++){
-    //     float closestdistance = texture(shadowMap,projCoords.xy + blockerSize.x/planeSize.x * poissonDisk[i]).r;
-    //     //这里不需要texelSize，因为引入zNear和lighSize后，计算出的size是真实的，不是像素数
-    //     if(closestdistance < projCoords.z - bias){
-    //         blockerDepth+= closestdistance;
-    //         blockers += 1; 
-    //     }
-    // }
-    // if(blockers == 0)
-    //     return 0.0;
+    float blockers = 0.0;
+    for(int i = 0;i<SAMPLE_SIZE;i++){
+        float closestdistance = texture(shadowMap,projCoords.xy + 0.5*blockerSize.x/planeSize.x * poissonDisk[i]).r;
+        //这里不需要texelSize，因为引入zNear和lighSize后，计算出的size是真实的，不是像素数
+        if(closestdistance < projCoords.z - bias){
+            blockerDepth+= closestdistance;
+            blockers += 1; 
+        }
+    }
+    if(blockers == 0)
+        return 0.0;
     
-    // blockerDepth /= blockers; //average depth
+    blockerDepth /= blockers; //average depth
 
-    // vec2 filterSize = (projCoords.z-blockerDepth)/blockerDepth * lightSize/planeSize.x;
-    // //2. PCF with filterSize 
-    // for(int i = 0;i<SAMPLE_SIZE;i++){
-    //     float closestDepth = texture(shadowMap,projCoords.xy+filterSize*poissonDisk[i]).r;
-    //     //这里不需要texelSize，因为引入zNear和lighSize后，计算出的size是真实的，不是像素数
-    //     shadow += projCoords.z -bias > closestDepth ? 1.0 : 0.0; 
-    // }
-    // shadow /= SAMPLE_SIZE;
+    vec2 filterSize = (projCoords.z-blockerDepth)/blockerDepth * lightSize/planeSize.x;
+    //2. PCF with filterSize 
+    for(int i = 0;i<SAMPLE_SIZE;i++){
+        float closestDepth = texture(shadowMap,projCoords.xy+0.5 * filterSize*poissonDisk[i]).r;
+        //这里不需要texelSize，因为引入zNear和lighSize后，计算出的size是真实的，不是像素数
+        shadow += projCoords.z -bias > closestDepth ? 1.0 : 0.0; 
+    }
+    shadow /= SAMPLE_SIZE;
     // debug 
     // shadow = texture(shadowMap,projCoords.xy).r;
     // shadow = blockerSize.x / planeSize.x;
     // shadow = projCoords.z;
     // shadow = blockers/16.0;
-    shadow = fs_in.FragPos.z;
+    // shadow = fs_in.FragPos.z;
+    // shadow = lightSpacePosition.x/5;
     return shadow;
 }
 
@@ -115,6 +115,6 @@ void main()
     float shadow = ShadowCalculation(fs_in.FragPosLightSpace,bias);                      
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;    
     
-    // FragColor = vec4(lighting, 1.0);
-    FragColor = vec4(shadow,shadow,shadow,1.0);
+    FragColor = vec4(lighting, 1.0);
+    // FragColor = vec4(shadow,shadow,shadow,1.0);
 }

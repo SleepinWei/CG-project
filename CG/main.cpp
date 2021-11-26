@@ -88,7 +88,8 @@ float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
 //lighting 
-glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+//glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
+//glm::vec3 lightPos(1.0 * 10, 1.0 * 10, 1.0 * 10);
 
 //plane 
 unsigned int planeVAO;
@@ -203,7 +204,8 @@ int main() {
 
     // lighting info
     // -------------
-    glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
+    float n =10.f;
+    glm::vec3 lightPos(-2.0f * n + 10, 4.0f * n, -1.0f*n);
 #endif
 
 	//render loop
@@ -226,8 +228,9 @@ int main() {
 
         glm::mat4 lightProjection, lightView;
         glm::mat4 lightSpaceMatrix;
-        float near_plane = 1.0f, far_plane = 7.5f;
+        float near_plane = 1.0f, far_plane = 50.f;
         lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+        //lightProjection = glm::perspective(glm::radians(45.0f), 10.0f, near_plane, far_plane);
         lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
         lightSpaceMatrix = lightProjection * lightView;
         
@@ -259,8 +262,8 @@ int main() {
         //shader.setMat4("projection", projection);
         //shader.setMat4("view", view);
         glm::mat4 model = glm::mat4(1.0f);
+        model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
         model = glm::translate(model, lightPos);
-        model = glm::scale(model, glm::vec3(0.2, 0.2, 0.2));
         lightShader.use();
         lightShader.setMat4("model", model);
         lightShader.setMat4("projection", projection);
