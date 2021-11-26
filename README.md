@@ -16,7 +16,7 @@ Special thanks to my dear teammates!
     +  pcss
 ## Plans 
 - [ ] Terrain 
-- [ ] Shadows (PCF,PCSS)
+- [x] Shadows (PCF,PCSS):PCSS for ortho is done. For perspective is in progress. 
 - [ ] Cascaded Shadow Mapping   
 - [ ] imGui 
 - [ ] 3D model 
