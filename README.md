@@ -14,10 +14,14 @@ Special thanks to my dear teammates!
 +  shader 
     +  shadow_mapping
     +  pcss
-## Plans 
+## Plans / Progress 
 - [ ] Terrain 
+    - [ ] lod system 
+    - [ ] rendering of height map  
+    - [ ] integrating into bullet3 engine 
 - [x] Shadows (PCF,PCSS):PCSS for ortho is done. For perspective is in progress. 
 - [ ] Cascaded Shadow Mapping   
+- [ ] deferred rendering 
 - [ ] imGui 
 - [ ] 3D model 
 - [ ] Controlling 
