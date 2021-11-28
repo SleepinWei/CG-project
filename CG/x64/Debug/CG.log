@@ -1,13 +1,70 @@
-﻿  main.cpp
-D:\IT\ComputerGraphics\Course\Project\Forza\include\shader\Shader.h(88,36): warning C4101: “e”: 未引用的局部变量
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Mesh.h(84,1): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Mesh.h(119,1): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(139,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(140,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(144,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(145,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(147,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(148,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(157,31): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\main.cpp(163,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-  CG.vcxproj -> D:\IT\ComputerGraphics\Course\Project\Forza\x64\Debug\Project.exe
+﻿  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_glfw.cpp
+  imgui_impl_opengl3.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  main.cpp
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\include\shader\Shader.h(88,36): warning C4101: “e”: 未引用的局部变量
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\CG\Mesh.h(84,1): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\CG\Mesh.h(122,1): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\CG\Utils.h(139,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\CG\Utils.h(140,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\CG\Utils.h(144,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\CG\Utils.h(145,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\CG\Utils.h(147,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\CG\Utils.h(148,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\CG\Utils.h(157,31): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\CG\main.cpp(163,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+  正在生成代码...
+  glad.c
+LINK : warning LNK4098: 默认库“MSVCRT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
+LINK : warning LNK4217: 符号“free”(在“ libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(win32_joystick.obj)”(函数“_glfwInitJoysticksWin32”中)导入
+LINK : warning LNK4217: 符号“free”(在“ libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(wgl_context.obj)”(函数“makeContextCurrentWGL”中)导入
+LINK : warning LNK4217: 符号“free”(在“ libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(egl_context.obj)”(函数“_glfwCreateContextEGL”中)导入
+LINK : warning LNK4286: 符号“free”(在“libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(osmesa_context.obj)”导入
+LINK : warning LNK4286: 符号“free”(在“libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(win32_window.obj)”导入
+LINK : warning LNK4217: 符号“free”(在“ libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(win32_init.obj)”(函数“createHelperWindow”中)导入
+LINK : warning LNK4217: 符号“free”(在“ libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(win32_monitor.obj)”(函数“_glfwPlatformGetMonitorPos”中)导入
+LINK : warning LNK4217: 符号“free”(在“ libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(vulkan.obj)”(函数“_glfwGetVulkanResultString”中)导入
+LINK : warning LNK4217: 符号“free”(在“ libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(init.obj)”(函数“terminate”中)导入
+LINK : warning LNK4286: 符号“free”(在“libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(monitor.obj)”导入
+LINK : warning LNK4286: 符号“free”(在“libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(window.obj)”导入
+LINK : warning LNK4286: 符号“free”(在“libucrtd.lib(free.obj)”中定义)已由“glfw3.lib(input.obj)”导入
+LINK : warning LNK4217: 符号“memmove”(在“ libvcruntimed.lib(memcpy.obj)”中定义)已由“glfw3.lib(monitor.obj)”(函数“_glfwInputMonitor”中)导入
+LINK : warning LNK4217: 符号“strncpy”(在“ libucrtd.lib(strncpy.obj)”中定义)已由“glfw3.lib(monitor.obj)”(函数“_glfwAllocMonitor”中)导入
+LINK : warning LNK4286: 符号“strncpy”(在“libucrtd.lib(strncpy.obj)”中定义)已由“glfw3.lib(window.obj)”导入
+LINK : warning LNK4286: 符号“strncpy”(在“libucrtd.lib(strncpy.obj)”中定义)已由“glfw3.lib(input.obj)”导入
+LINK : warning LNK4286: 符号“strncpy”(在“libucrtd.lib(strncpy.obj)”中定义)已由“glfw3.lib(win32_joystick.obj)”导入
+LINK : warning LNK4217: 符号“qsort”(在“ libucrtd.lib(qsort.obj)”中定义)已由“glfw3.lib(monitor.obj)”(函数“refreshVideoModes”中)导入
+LINK : warning LNK4217: 符号“qsort”(在“ libucrtd.lib(qsort.obj)”中定义)已由“glfw3.lib(win32_joystick.obj)”(函数“_glfwDetectJoystickConnectionWin32”中)导入
+LINK : warning LNK4217: 符号“realloc”(在“ libucrtd.lib(realloc.obj)”中定义)已由“glfw3.lib(monitor.obj)”(函数“_glfwInputMonitor”中)导入
+LINK : warning LNK4286: 符号“realloc”(在“libucrtd.lib(realloc.obj)”中定义)已由“glfw3.lib(input.obj)”导入
+LINK : warning LNK4286: 符号“realloc”(在“libucrtd.lib(realloc.obj)”中定义)已由“glfw3.lib(win32_monitor.obj)”导入
+LINK : warning LNK4217: 符号“strcspn”(在“ libucrtd.lib(strcspn.obj)”中定义)已由“glfw3.lib(input.obj)”(函数“glfwUpdateGamepadMappings”中)导入
+LINK : warning LNK4217: 符号“strncmp”(在“ libucrtd.lib(strncmp.obj)”中定义)已由“glfw3.lib(input.obj)”(函数“parseMapping”中)导入
+LINK : warning LNK4286: 符号“strncmp”(在“libucrtd.lib(strncmp.obj)”中定义)已由“glfw3.lib(context.obj)”导入
+LINK : warning LNK4286: 符号“strncmp”(在“libucrtd.lib(strncmp.obj)”中定义)已由“glfw3.lib(egl_context.obj)”导入
+LINK : warning LNK4217: 符号“strtoul”(在“ libucrtd.lib(strtox.obj)”中定义)已由“glfw3.lib(input.obj)”(函数“parseMapping”中)导入
+LINK : warning LNK4217: 符号“strstr”(在“ libvcruntimed.lib(strstr.obj)”中定义)已由“glfw3.lib(context.obj)”(函数“_glfwStringInExtensionString”中)导入
+LINK : warning LNK4286: 符号“strstr”(在“libvcruntimed.lib(strstr.obj)”中定义)已由“glfw3.lib(win32_joystick.obj)”导入
+LINK : warning LNK4217: 符号“sscanf”(在“ imgui.obj”中定义)已由“glfw3.lib(context.obj)”(函数“_glfwRefreshContextAttribs”中)导入
+LINK : warning LNK4217: 符号“sprintf”(在“ imgui_demo.obj”中定义)已由“glfw3.lib(win32_joystick.obj)”(函数“_glfwDetectJoystickConnectionWin32”中)导入
+LINK : warning LNK4286: 符号“_vsnprintf”(在“imgui.obj”中定义)已由“MSVCRT.lib(vsnprintf.obj)”导入
+glfw3.lib(win32_joystick.obj) : error LNK2019: 无法解析的外部符号 __imp_calloc，函数 supportsXInput 中引用了该符号
+glfw3.lib(wgl_context.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(egl_context.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(osmesa_context.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(win32_window.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(win32_init.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(win32_monitor.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(vulkan.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(init.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(monitor.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(window.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(input.obj) : error LNK2001: 无法解析的外部符号 __imp_calloc
+glfw3.lib(init.obj) : error LNK2019: 无法解析的外部符号 __imp_vsnprintf，函数 _glfwInputError 中引用了该符号
+MSVCRT.lib(vsnprintf.obj) : error LNK2001: 无法解析的外部符号 __imp_vsnprintf
+glfw3.lib(input.obj) : error LNK2019: 无法解析的外部符号 __imp_strspn，函数 glfwUpdateGamepadMappings 中引用了该符号
+C:\Users\魔域墨鱼\Documents\GitHub\CG-project\x64\Debug\Project.exe : fatal error LNK1120: 3 个无法解析的外部命令
