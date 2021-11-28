@@ -88,6 +88,9 @@ public:
         glActiveTexture(GL_TEXTURE0);
     }
     void Draw(Shader& shader) {
+        //use shader
+        shader.use();
+
         // bind appropriate textures
         unsigned int diffuseNr = 1;
         unsigned int specularNr = 1;

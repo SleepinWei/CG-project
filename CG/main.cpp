@@ -153,7 +153,7 @@ int main() {
 
     // lighting info
     // -------------
-    float n =10.f;
+    float n =20.f;
     glm::vec3 lightPos(-2.0f * n + 10, 4.0f * n, -1.0f*n);
 #endif
 
@@ -177,9 +177,12 @@ int main() {
 
         glm::mat4 lightProjection, lightView;
         glm::mat4 lightSpaceMatrix;
-        float near_plane = 1.0f, far_plane = 50.f;
+        float near_plane = 5.f, far_plane = 50.f;
+ 
         //lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-        lightProjection = glm::perspective(glm::radians(90.0f), (float)SCR_WIDTH / (float)SCR_HEIGHT, near_plane, far_plane);
+        float fovy = glm::radians(45.0f);
+        float aspect = (float)SHADOW_WIDTH / (float)SHADOW_HEIGHT;
+        lightProjection = glm::perspective(fovy,aspect, near_plane, far_plane);
         lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
         lightSpaceMatrix = lightProjection * lightView;
         
@@ -236,6 +239,10 @@ int main() {
 
         glm::vec2 lightSize = glm::vec2(5.f, 5.f);
         pcssShader.setVec2("lightSize", lightSize);
+        glm::vec2 planeSize = glm::vec2(2 * near_plane * glm::tan(fovy / 2) * aspect, 2 * near_plane * glm::tan(fovy / 2));
+        pcssShader.setVec2("planeSize", planeSize);
+        pcssShader.setFloat("zNear", near_plane);
+
         //float zNear = 10.0f;
         //pcssShader.setFloat("zNear", 0.01f);
         renderScene(pcssShader);

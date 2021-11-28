@@ -323,4 +323,5 @@ void renderQuad()
     glBindVertexArray(0);
 }
 
-#endif // !UTILS_H
+#endif 
+// !UTILS_H
