@@ -1,9 +1,9 @@
 #version 460 core
 // Percentage Closer Soft Shadows
-/*
+/*************************
 * ShadowCalculationPerspective: for point light(perspective projection)
 * ShadowCalculation: for parallel light(orthographic projection)
-*/
+**************************/
 out vec4 FragColor;
 
 in VS_OUT {
