@@ -101,5 +101,8 @@
     <ClInclude Include="SkyBox.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Light.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

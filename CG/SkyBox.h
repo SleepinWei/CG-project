@@ -5,34 +5,80 @@
 #include<vector>
 #include<string>
 
-#include"Mesh.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include"stb_image.h"
 #include<shader/Shader.h>
 
 class SkyBox {
 public:
+    /*attributes*/
 	unsigned int textureID;
-	std::vector<Texture>textures_faces;
 	int width, height, nrChannels;
-    std::vector<std::string> faces{
-    "right.jpg",
-    "left.jpg",
-    "top.jpg",
-    "bottom.jpg",
-    "front.jpg",
-    "back.jpg"
-    };
-    unsigned int loadCubemap(std::vector<std::string> faces)
+    std::vector<std::string> faces;
+    GLuint VAO, VBO;
+    std::vector<float> vertices;
+
+    /*functions*/
+    SkyBox() 
     {
-        //unsigned int textureID;
+        this->faces = {
+        "right.jpg","left.jpg","top.jpg",
+        "bottom.jpg","front.jpg","back.jpg"
+        };
+        this->vertices = {
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        -1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f, -1.0f,
+         1.0f,  1.0f,  1.0f,
+         1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f, -1.0f,
+         1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+         1.0f, -1.0f,  1.0f
+        };
+    }
+
+    unsigned int loadCubemap()
+    {
+        /*load cubeMap*/
         glGenTextures(1, &textureID);
         glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
-
-        int width, height, nrChannels;
+        std::string dirPath = "../resources/textures/skybox/";
         for (unsigned int i = 0; i < faces.size(); i++)
         {
-            unsigned char* data = stbi_load(faces[i].c_str(), &width, &height, &nrChannels, 0);
+            unsigned char* data = stbi_load((dirPath+faces[i]).c_str(), &width, &height, &nrChannels, 0);
             if (data)
             {
                 glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
@@ -53,9 +99,24 @@ public:
         glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
         return textureID;
     }
+    void setUp() {
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        glBindVertexArray(VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        
+        loadCubemap();
+        //glBindVertexArray(VAO);
+        //glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+    }
     void render(Shader& shader) {
-        glDepthMask(GL_FALSE);
-        shader.use();
+        //glDepthMask(GL_FALSE);
+        //glDepthFunc(GL_LEQUAL);
+        //shader.use();
         /*glBindVertexArray(skyboxVAO);*/
     }
 };

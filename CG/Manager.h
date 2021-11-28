@@ -1,20 +1,73 @@
 #ifndef MANAGER_H
 #define MANAGER_H
+/******************************
+* This file contains various managers 
+* @class RenderManager: controls rendering process(basically the whole world is controlled by it
+* @class Physics Manager: if necessary.  
+* @class World Manager: if Physics manager is applied, then World Manger is applied and 
+	controls both rendering and physics simulation
+*******************************/
+
+/********************************
+* notifications:
+* TEXTURE_0 is for skybox 
+********************************/
+
+
 #include"Object.h"
 #include"Camera.h"
 #include"Car.h"
 #include<vector>
 #include<glfw/glfw3.h>
-
+#include"SkyBox.h"
 
 class RenderManager {
+private:
+	/*private Functions*/
+	void initCamera() {
+		lastX = SCR_WIDTH / 2.0f;
+		lastY = SCR_HEIGHT / 2.0f;
+	}
+	void initSkyBox() {
+		skyBox = new SkyBox();
+	}
+
+public:
+	/*attributes*/
+	//basic settings 
+	static const unsigned int SCR_WIDTH = 1600;
+	static const unsigned int SCR_HEIGHT = 1200;
+	bool enableMouse;
+
 	std::vector<Object*> objects; 
 
+	SkyBox* skyBox;
+
+	//cameras
+	Camera* camera;
+	float lastX;
+	float lastY;
+	
+	//time
+	float deltaTime;
+	float lastFrame;
+	//terrain engine 
+
+
+	/*public functions*/
+	void initWorld() {
+		enableMouse = true;
+		deltaTime = 0.0f;
+		lastFrame = 0.0f;
+		initCamera();
+		initSkyBox();
+	}
 	void render() {
 		for (auto p : objects) {
 			p->render();
 		}
 	}
+
 
 	void addObject(Object* object) {
 		//add objects here 
