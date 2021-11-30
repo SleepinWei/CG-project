@@ -41,18 +41,6 @@ public:
 
     // draws the model, and thus all its meshes
     //void Draw(Shader& shader)
-    void render()
-    {
-        for (unsigned int i = 0; i < meshes.size(); i++)
-            //meshes[i].Draw(shader);
-            meshes[i].Draw();
-    }
-
-    void registerShaders(std::vector<Shader> shaders) {
-        for (unsigned int i = 0; i < shaders.size(); i++) {
-            meshes[i].registerShader(shaders[i]);
-        }
-    }
     void Draw(Shader& shader) {
         for (unsigned int i = 0; i < meshes.size(); i++)
             meshes[i].Draw(shader);

@@ -62,9 +62,9 @@ public:
 		initCamera();
 		initSkyBox();
 	}
-	void render() {
+	void renderScene() {
 		for (auto p : objects) {
-			p->render();
+			;
 		}
 	}
 

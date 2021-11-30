@@ -68,6 +68,7 @@ public:
         -1.0f, -1.0f,  1.0f,
          1.0f, -1.0f,  1.0f
         };
+        setUp();
     }
 
     unsigned int loadCubemap()
@@ -113,11 +114,23 @@ public:
         //glActiveTexture(GL_TEXTURE0);
         //glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
     }
-    void render(Shader& shader) {
-        //glDepthMask(GL_FALSE);
-        //glDepthFunc(GL_LEQUAL);
-        //shader.use();
-        /*glBindVertexArray(skyboxVAO);*/
+    void render(Shader& shader,Camera& camera) {
+        extern int SCR_WIDTH;
+        extern int SCR_HEIGHT;
+
+        glDepthFunc(GL_LEQUAL);
+        shader.use();
+        glm::mat4 view,projection;
+        view = glm::mat4(glm::mat3(camera.GetViewMatrix()));//remove translation 
+        projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+        shader.setMat4("view", view);
+        shader.setMat4("projection", projection);
+        glBindVertexArray(VAO);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, textureID);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
     }
 };
 #endif // !SKYBOX_H

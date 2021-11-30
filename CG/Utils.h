@@ -13,6 +13,10 @@
 #include<iostream>
 #include<glfw/glfw3.h>
 #include"Camera.h"
+#include<imgui/imgui.h>
+#include<imgui/imgui_impl_glfw.h>
+#include<imgui/imgui_impl_opengl3.h>
+//#include<imgui/imgui_impl_opengl3_loader.h>
 //#include
 
 /*******************************
@@ -64,10 +68,6 @@ void imGuiInit(GLFWwindow* window) {
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 150");
-
-    bool show_demo_window = true;
-    bool show_another_window = false;
-    ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 }
 
 int gladInit() {
@@ -108,6 +108,7 @@ int createWindow(GLFWwindow*& window,
 
 void processInput(GLFWwindow* window)
 {
+    static bool enableCursor = false;
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
@@ -119,6 +120,19 @@ void processInput(GLFWwindow* window)
         camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+    {
+        if (!enableCursor)
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            glfwSetCursorPosCallback(window, NULL);
+        }
+        else {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetCursorPosCallback(window, mouse_callback);
+        }
+        enableCursor = !enableCursor;
+    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
