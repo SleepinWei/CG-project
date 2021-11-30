@@ -1,7 +1,6 @@
 #version 460 core
 // Percentage Closer Soft Shadows
 /*************************
-* ShadowCalculationPerspective: for point light(perspective projection)
 * ShadowCalculation: for parallel light(orthographic projection)
 **************************/
 out vec4 FragColor;
@@ -80,13 +79,6 @@ float ShadowCalculation(vec4 fragPosLightSpace,float bias)
         shadow += projCoords.z -bias > closestDepth ? 1.0 : 0.0; 
     }
     shadow /= SAMPLE_SIZE;
-    // debug 
-    // shadow = texture(shadowMap,projCoords.xy).r;
-    // shadow = blockerSize.x / planeSize.x;
-    // shadow = projCoords.z;
-    // shadow = blockers/16.0;
-    // shadow = fs_in.FragPos.z;
-    // shadow = lightSpacePosition.x/5;
     return shadow;
 }
 
@@ -103,7 +95,6 @@ void main()
     vec3 diffuse = diff * lightColor;
     // specular
     vec3 viewDir = normalize(viewPos - fs_in.FragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
     float spec = 0.0;
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
