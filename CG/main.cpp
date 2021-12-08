@@ -14,25 +14,16 @@
 #include"Shadow.h"
 //#define STB_IMAGE_IMPLEMENTATION
 //#include"stb_image.h"
-
+#include"Manager.h"
+#include"Terrain.h"
 //imgui 
 #include"../include/imgui/imgui_impl_glfw.h"
 #include"../include/imgui/imgui.h"
 #include"../include/imgui/imgui_impl_opengl3.h"
 
 #include"Utils.h"
-int initPhysics() {
-	//use functions or define a class? 
-	//initialize a dynamics world 
-	//How to design? 
-    return 0;
-}
 
-class PhysicsManager {
-	void initPhysics();
-	void stepSimulation();
-};
-
+#include<bullet/btBulletDynamicsCommon.h>
 #define TEST_OBJ
 #ifdef TEST_OBJ
 // settings
@@ -51,31 +42,39 @@ float lastFrame = 0.0f;
 //plane 
 //unsigned int planeVAO;
 #endif
-int main() {
+void physics() {
+	PhysicsManager* phyManager = new PhysicsManager();
+	Terrain* terrain = new Terrain("height_map.png");
+	phyManager->collisionShapes.push_back(terrain->heightFieldShape);
+	for (int i = 0; i < 150; i++) {
+		phyManager->debugDraw(true);
+	}
+}
+void renders() {
 	glfwInit();
 
 	//create a window
 	GLFWwindow* window;
-	createWindow(window, SCR_WIDTH,SCR_HEIGHT);
+	createWindow(window, SCR_WIDTH, SCR_HEIGHT);
 	glfwMakeContextCurrent(window);
-	
+
 	//set Viewport
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//init glad 
 	gladInit();
-    glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 
-    //init GUI 
-    imGuiInit(window);
+	//init GUI 
+	imGuiInit(window);
 
 #ifdef TEST_OBJ
 	Shader skyShader("../shader/sky_box.vs", "../shader/sky_box.fs");
 	Shader shadowShader("../shader/parallel_light/shadow_mapping_depth.vs", "../shader/parallel_light/shadow_mapping_depth.fs");
 	Shader shader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
 	Shader lightShader("../shader/light.vs", "../shader/light.fs");
-    
-    SkyBox* skybox = new SkyBox();
+
+	SkyBox* skybox = new SkyBox();
 	Shadow* shadow = new Shadow();
 	Plane* plane = new Plane();
 	glm::vec3 lightPosition = glm::vec3(0.f, 20.f, -20.f);
@@ -85,18 +84,18 @@ int main() {
 	//Model car("../resources/objects/Avent_sport/Avent_sport.obj");
 	//settings 
 
-    // configure depth map FBO
-    // -----------------------
+	// configure depth map FBO
+	// -----------------------
 
-    // shader configuration
-    // --------------------
-    
+	// shader configuration
+	// --------------------
+
 	shader.use();
 	shader.setInt("diffuseTexture", 0);
 	shader.setInt("shadowMap", 1);
 #endif
 	glEnable(GL_DEPTH_TEST);
-	while(!glfwWindowShouldClose(window))
+	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
@@ -107,7 +106,7 @@ int main() {
 		//1. Camera Movement
 
 		//2. Objects Movement
-		
+
 		//3. Rendering 
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -116,7 +115,7 @@ int main() {
 		{
 			ImGui::Begin("Controlling pad");
 			ImGui::Text("Change light position.");
-			ImGui::SliderFloat("x", &(lightPosition.x),0.0f,25.f);
+			ImGui::SliderFloat("x", &(lightPosition.x), 0.0f, 25.f);
 			ImGui::SliderFloat("y", &(lightPosition.y), 0.0f, 25.f);
 			ImGui::SliderFloat("z", &(lightPosition.z), 0.0f, 25.f);
 			ImGui::End();
@@ -151,7 +150,7 @@ int main() {
 		glm::mat4 model = glm::mat4(1.0f);
 
 		glBindVertexArray(plane->VAO);
-		shadowShader.setMat4("model",model);
+		shadowShader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		//car.Draw(shadowShader);
 
@@ -174,7 +173,7 @@ int main() {
 		shader.setMat4("projection", projection);
 		shader.setMat4("view", view);
 		shader.setVec3("viewPos", camera.Position);
-		shader.setVec3("lightPos", lightPosition); 
+		shader.setVec3("lightPos", lightPosition);
 		shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
 		shader.setMat4("lightView", lightView);
 		shader.setFloat("zNear", 1.0f);
@@ -216,13 +215,17 @@ int main() {
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 		glDepthFunc(GL_LESS);
-        
+
 #endif
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+}
+
+int main() {
+	physics();
 }
 
 #ifdef TEST_OBJ
