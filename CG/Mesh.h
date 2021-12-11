@@ -2,6 +2,7 @@
 #define MESH_H
 #include<glm/glm.hpp>
 #include<glm/gtc/matrix_transform.hpp>
+#include<bullet/btBulletDynamicsCommon.h>
 #include<shader/Shader.h>
 #include<string>
 #include<vector>
@@ -37,6 +38,8 @@ public:
     std::vector<Texture>      textures;
     unsigned int VAO;
 
+    btTriangleMesh* meshInterface;
+
     // constructor
     Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Texture> textures)
     {
@@ -46,6 +49,25 @@ public:
 
         // now that we have all the required data, set the vertex buffers and its attribute pointers.
         setupMesh();
+        generateMeshInterface();
+    }
+
+    void generateMeshInterface()
+    {
+        meshInterface = new btTriangleMesh();
+
+        for (int i = 0; i < indices.size(); i+=3) {
+            std::vector<glm::vec3> face;
+            face.push_back((vertices[i].Position));
+            face.push_back((vertices[i + 1].Position));
+            face.push_back((vertices[i + 2].Position));
+
+            meshInterface->addTriangle(
+                btVector3(face[0].x, face[0].y, face[0].z),
+                btVector3(face[1].x, face[1].y, face[1].z),
+                btVector3(face[2].x, face[2].y, face[2].z)
+            );
+        }
     }
 
     // render the mesh
