@@ -34,5 +34,5 @@
 .vs/
 tempfile/
 *.cfg
-# x64/*
+x64/
 resources/objects/
