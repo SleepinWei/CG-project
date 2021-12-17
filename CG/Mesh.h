@@ -49,13 +49,15 @@ public:
 
         // now that we have all the required data, set the vertex buffers and its attribute pointers.
         setupMesh();
-        generateMeshInterface();
+        // generateMeshInterface();
     }
 
     void generateMeshInterface()
     {
         meshInterface = new btTriangleMesh();
-
+        /***** test ****/
+        
+        /************/
         for (int i = 0; i < indices.size(); i+=3) {
             std::vector<glm::vec3> face;
             face.push_back((vertices[i].Position));

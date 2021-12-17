@@ -69,12 +69,15 @@ void renders() {
 	imGuiInit(window);
 
 #ifdef TEST_OBJ
-	Shader skyShader("../shader/sky_box.vs", "../shader/sky_box.fs");
+	//Shader skyShader("../shader/sky_box.vs", "../shader/sky_box.fs");
 	Shader shadowShader("../shader/parallel_light/shadow_mapping_depth.vs", "../shader/parallel_light/shadow_mapping_depth.fs");
 	Shader shader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
 	Shader lightShader("../shader/light.vs", "../shader/light.fs");
 
-	SkyBox* skybox = new SkyBox();
+	//Model model("../resources/objects/Avent_sport/Avent_sport.obj");
+
+	//SkyBox* skybox = new SkyBox();
+	DynamicSky* sky = new DynamicSky();
 	Shadow* shadow = new Shadow();
 	Plane* plane = new Plane();
 	glm::vec3 lightPosition = glm::vec3(0.f, 20.f, -20.f);
@@ -118,6 +121,14 @@ void renders() {
 			ImGui::SliderFloat("x", &(lightPosition.x), 0.0f, 25.f);
 			ImGui::SliderFloat("y", &(lightPosition.y), 0.0f, 25.f);
 			ImGui::SliderFloat("z", &(lightPosition.z), 0.0f, 25.f);
+			ImGui::Text("Camera pos");
+			ImGui::SliderFloat("x", &camera.Position.x, -1.0f, 1.0f);
+			ImGui::SliderFloat("y", &camera.Position.y, -1.0f, 1.0f);
+			ImGui::SliderFloat("z", &camera.Position.z, -1.0f, 1.0f);
+			ImGui::SliderFloat("Yaw", &camera.Yaw, -90.0f, 90.0f);
+			ImGui::SliderFloat("Pitch", &camera.Pitch, -90.0f, 90.0f);
+			ImGui::SliderFloat("Zoom", &camera.Zoom, 0.0f, 90.0f);
+
 			ImGui::End();
 		}
 		ImGui::Render();
@@ -126,13 +137,14 @@ void renders() {
 #ifdef TEST_OBJ
 
 		//1. render shadows 
+		
 		glm::mat4 lightProjection, lightView;
 		glm::mat4 lightSpaceMatrix;
 		float near_plane = 1.0f;
 		float far_plane = 50.f;
 
 		lightProjection = glm::ortho(-10.f, 10.f, -10.f, 10.f, near_plane, far_plane);
-		float fovy = glm::radians(90.f);
+		float fovy = glm::radians(90.f);                                                                                                                              
 		float aspect = (float)shadow->shadowWidth / (float)shadow->shadowHeight;
 		//lightProjection = glm::perspective(fovy, aspect, near_plane, far_plane);
 		lightView = glm::lookAt(lightPosition, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
@@ -202,20 +214,19 @@ void renders() {
 
 		//glm::mat4 view, projection;
 
-		glDepthFunc(GL_LEQUAL);
-		skyShader.use();
-		view = glm::mat4(glm::mat3(camera.GetViewMatrix()));//remove translation 
-		projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		skyShader.setMat4("model", model);
-		skyShader.setMat4("view", view);
-		skyShader.setMat4("projection", projection);
-		glBindVertexArray(skybox->VAO);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->textureID);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		//glDepthFunc(GL_LESS);
+		//skyShader.use();
+		//view = glm::mat4(glm::mat3(camera.GetViewMatrix()));//remove translation 
+		//projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		//skyShader.setMat4("model", model);
+		//skyShader.setMat4("view", view);
+		//skyShader.setMat4("projection", projection);
+		//glBindVertexArray(skybox->VAO);
+		//glActiveTexture(GL_TEXTURE0);
+		//glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->textureID);
+		//glDrawArrays(GL_TRIANGLES, 0, 36);
+		sky->renderSky(camera);
 		glBindVertexArray(0);
-		glDepthFunc(GL_LESS);
-
 #endif
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
@@ -225,7 +236,8 @@ void renders() {
 }
 
 int main() {
-	physics();
+	//physics();
+	renders();
 }
 
 #ifdef TEST_OBJ
