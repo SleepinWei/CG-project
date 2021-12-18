@@ -220,6 +220,7 @@ private:
             if (!skip)
             {   // if texture hasn't been loaded already, load it
                 Texture texture;
+                //std::cout << str.C_Str() << std::endl;
                 texture.id = TextureFromFile(str.C_Str(), this->directory);
                 texture.type = typeName;
                 texture.path = str.C_Str();

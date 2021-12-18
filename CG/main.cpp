@@ -84,7 +84,10 @@ void renders() {
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//Model car("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
-	//Model car("../resources/objects/Avent_sport/Avent_sport.obj");
+	Model car("../resources/objects/Avent_sport/Avent_sport.obj");
+	std::cout << car.length << std::endl;
+	std::cout << car.width << std::endl;
+	std::cout << car.height << std::endl;
 	//settings 
 
 	// configure depth map FBO
