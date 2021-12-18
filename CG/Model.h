@@ -20,9 +20,11 @@
 #include <iostream>
 #include <map>
 #include <vector>
+#include <cmath>
 //using namespace std;
 
 unsigned int TextureFromFile(const char* path, const std::string& directory, bool gamma = false);
+const double inf = 1e10;
 
 class Model
 {
@@ -31,12 +33,16 @@ public:
     std::vector<Texture> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
     std::vector<Mesh>    meshes;
     std::string directory;
+    double length;
+    double width;
+    double height;
     bool gammaCorrection;
 
     // constructor, expects a filepath to a 3D model.
     Model(std::string const& path, bool gamma = false) : gammaCorrection(gamma)
     {
         loadModel(path);
+        generateSize();
     }
 
     // draws the model, and thus all its meshes
@@ -47,6 +53,23 @@ public:
     }
 
 private:
+    double xmax = -inf, xmin = inf;
+    double ymax = -inf, ymin = inf;
+    double zmax = -inf, zmin = inf;
+
+    void generateSize()
+    {
+        double xx = xmax - xmin;
+        double yy = ymax - ymin;
+        double zz = zmax - zmin;
+        if (xx < yy) { double tt = xx; xx = yy; yy = tt; }
+        if (yy < zz) { double tt = yy; yy = zz; zz = tt; }
+        if (xx < yy) { double tt = xx; xx = yy; yy = tt; }
+        length = xx;
+        width = yy;
+        height = zz;
+    }
+
     // loads a model with supported ASSIMP extensions from file and stores the resulting meshes in the meshes vector.
     void loadModel(std::string const& path)
     {
@@ -101,6 +124,11 @@ private:
             vector.x = mesh->mVertices[i].x;
             vector.y = mesh->mVertices[i].y;
             vector.z = mesh->mVertices[i].z;
+
+            xmax = std::max(xmax, (double)vector.x); xmin = std::min(xmin, (double)vector.x);
+            ymax = std::max(ymax, (double)vector.y); ymin = std::min(ymin, (double)vector.y);
+            zmax = std::max(zmax, (double)vector.z); zmin = std::min(zmin, (double)vector.z);
+
             vertex.Position = vector;
             // normals
             if (mesh->HasNormals())
@@ -192,6 +220,7 @@ private:
             if (!skip)
             {   // if texture hasn't been loaded already, load it
                 Texture texture;
+                //std::cout << str.C_Str() << std::endl;
                 texture.id = TextureFromFile(str.C_Str(), this->directory);
                 texture.type = typeName;
                 texture.path = str.C_Str();
