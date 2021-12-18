@@ -11,7 +11,7 @@ vec2( 1.0,  1.0), vec2( 1.0, -1.0));
 
 void main()
 {
-    float depth = 0.0;
+    float depth = 1.0;
     gl_Position = vec4(data[gl_VertexID], depth, 1.0);
     pos = transpose(mat3(V)) * (inverse(P) * gl_Position).xyz;
     // vec4 temp = transpose(V) * (inverse(P) * gl_Position);

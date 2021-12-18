@@ -7,7 +7,7 @@ out vec2 UV;
 
   void main()
   {
-    float depth = 0.0;
+    float depth = 1.0;
     gl_Position = vec4(data[gl_VertexID], depth, 1.0);
     UV = gl_Position.xy * 0.5 + 0.5;
   }

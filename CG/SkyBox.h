@@ -277,7 +277,7 @@ public:
         skyShader->setMat4("P", projection);
         skyShader->setMat4("V", view);
         skyShader->setFloat("time", time);
-        glDisable(GL_DEPTH_TEST);
+        //glDisable(GL_DEPTH_TEST);
        
         glBindVertexArray(VAO1);
 //#define TEST
@@ -298,7 +298,7 @@ public:
         postShader->setMat4("P", projection);
         postShader->setMat4("V", view);
         glBindVertexArray(VAO2);
-        glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_DEPTH_TEST);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, vertices);
 

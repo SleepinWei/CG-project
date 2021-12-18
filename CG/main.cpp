@@ -73,7 +73,7 @@ void renders() {
 	Shader shadowShader("../shader/parallel_light/shadow_mapping_depth.vs", "../shader/parallel_light/shadow_mapping_depth.fs");
 	Shader shader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
 	Shader lightShader("../shader/light.vs", "../shader/light.fs");
-
+	
 	//Model model("../resources/objects/Avent_sport/Avent_sport.obj");
 
 	//SkyBox* skybox = new SkyBox();
@@ -212,19 +212,6 @@ void renders() {
 		lightShader.setMat4("model", lightModel);
 		renderCube();
 
-		//glm::mat4 view, projection;
-
-		//glDepthFunc(GL_LESS);
-		//skyShader.use();
-		//view = glm::mat4(glm::mat3(camera.GetViewMatrix()));//remove translation 
-		//projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		//skyShader.setMat4("model", model);
-		//skyShader.setMat4("view", view);
-		//skyShader.setMat4("projection", projection);
-		//glBindVertexArray(skybox->VAO);
-		//glActiveTexture(GL_TEXTURE0);
-		//glBindTexture(GL_TEXTURE_CUBE_MAP, skybox->textureID);
-		//glDrawArrays(GL_TRIANGLES, 0, 36);
 		sky->renderSky(camera);
 		glBindVertexArray(0);
 #endif

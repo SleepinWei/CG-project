@@ -116,5 +116,8 @@
     <ClInclude Include="Vehicle.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Grass.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

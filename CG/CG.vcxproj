@@ -173,6 +173,7 @@
     <ClInclude Include="..\include\imgui\imstb_truetype.h" />
     <ClInclude Include="BasicShapes.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Grass.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="Mesh.h" />

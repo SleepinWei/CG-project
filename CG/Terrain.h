@@ -23,6 +23,7 @@ public:
 	/*variables*/
 	//physics related
 	float* heightFieldData;
+	//byte* rawHeightFieldData;//just for test 
 	btHeightfieldTerrainShape* heightFieldShape;
 	bool isDynamic;
 
@@ -48,7 +49,8 @@ public:
 	Terrain(std::string filename) {
 		widthScale = 1.0;
 		heightScale = 1.0;
-		heightScale = 1.0;
+		//heightScale = 1.0;
+		valueScale = 10.0f;
 		upAxis = 2; //y axis is up 
 		type = PHY_FLOAT;
 		flipQuadEdges = false;
