@@ -1,14 +1,14 @@
 ﻿  main.cpp
-D:\IT\ComputerGraphics\Course\Project\Forza\include\shader\Shader.h(88,36): warning C4101: “e”: 未引用的局部变量
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Mesh.h(108,1): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(153,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(154,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(158,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(159,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(161,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(162,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Utils.h(171,31): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Manager.h(106,1): warning C4305: “参数”: 从“double”到“const btScalar”截断
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\Terrain.h(67,13): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\IT\ComputerGraphics\Course\Project\Forza\CG\main.cpp(103,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-  CG.vcxproj -> D:\IT\ComputerGraphics\Course\Project\Forza\x64\Debug\Project.exe
+F:\coding\Github Desktop\CG-project\include\shader\Shader.h(88,36): warning C4101: “e”: 未引用的局部变量
+F:\coding\Github Desktop\CG-project\CG\Mesh.h(108,1): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(153,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(154,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(158,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(159,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(161,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(162,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(171,31): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Manager.h(106,1): warning C4305: “参数”: 从“double”到“const btScalar”截断
+F:\coding\Github Desktop\CG-project\CG\Terrain.h(67,13): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\main.cpp(104,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+  CG.vcxproj -> F:\coding\Github Desktop\CG-project\x64\Debug\Project.exe
