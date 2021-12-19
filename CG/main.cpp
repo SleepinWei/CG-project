@@ -84,7 +84,7 @@ void renders() {
 	DynamicSky* sky = new DynamicSky();
 	Shadow* shadow = new Shadow();
 	Plane* plane = new Plane();
-	glm::vec3 lightPosition = glm::vec3(0.f, 20.f, -20.f);
+	glm::vec3 lightPosition = glm::vec3(0.f, 0.f, 0.f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//Model car("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
@@ -152,6 +152,10 @@ void renders() {
 		//--------
 #ifdef TEST_OBJ
 
+		//time 
+		float rate = 5.0f; 
+		float time = (float)glfwGetTime() * rate - 0.0f;
+		lightPosition = glm::vec3(0.0, 10 * glm::sin(time * 0.01), 10 * glm::cos(time * 0.01));
 		//1. render shadows 
 
 		glm::mat4 lightProjection, lightView;
@@ -231,7 +235,7 @@ void renders() {
 		lightShader.setMat4("model", lightModel);
 		renderCube();
 
-		sky->renderSky(camera);
+		sky->renderSky(camera,time);
 		glBindVertexArray(0);
 #endif
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

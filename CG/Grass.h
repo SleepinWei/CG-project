@@ -10,6 +10,8 @@
 //#include<shader/Shader.h>
 #include"ComplexShader.h"
 #include"Camera.h"
+#include"Utils.h"
+#include <shader/Shader.h>
 //typedef ComplexShader Shader;
 
 struct NumBlades {
@@ -191,4 +193,63 @@ public:
 		glDrawArraysIndirect(GL_PATCHES, reinterpret_cast<void*>(0));
 	}
 };
+
+class SimpleGrass {
+public:
+	GLuint VAO;
+	GLuint VBO;
+	std::vector<float> transparentVertices; 
+	GLuint texture;
+
+	Shader* grassShader;
+
+	SimpleGrass(){
+		init();
+		initShader();
+	}
+	~SimpleGrass() {
+
+	}
+	void init() {
+		transparentVertices = {
+			// positions         // texture Coords (swapped y coordinates because texture is flipped upside down)
+			0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+			0.0f, -0.5f,  0.0f,  0.0f,  1.0f,
+			1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+
+			0.0f,  0.5f,  0.0f,  0.0f,  0.0f,
+			1.0f, -0.5f,  0.0f,  1.0f,  1.0f,
+			1.0f,  0.5f,  0.0f,  1.0f,  0.0f
+		};
+
+		glGenVertexArrays(1, &VAO);
+		glGenBuffers(1, &VBO);
+		glBindVertexArray(VAO);
+		glBindBuffer(GL_ARRAY_BUFFER, VBO);
+		glBufferData(GL_ARRAY_BUFFER, transparentVertices.size() * sizeof(float), &transparentVertices[0], GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+		glBindVertexArray(0);
+
+		texture = loadTexture("../resources/textures/vegetation.png");
+	}
+	void initShader() {
+		grassShader = new Shader("../shader/grass.vs", "../shader/grass.fs");
+	}
+
+	void render(Camera& camera) {
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), float(SCR_WIDTH) / (float)SCR_HEIGHT, 1.0f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+		grassShader->setMat4("projection", projection);
+		grassShader->setMat4("view", view);
+
+		//set model 
+
+		//render 
+
+	}
+};
+
 #endif // !GRASS
