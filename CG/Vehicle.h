@@ -5,9 +5,10 @@
 #include <bullet/BulletDynamics/Vehicle/btRaycastVehicle.h>
 //#include <bullet/BulletDynamics/Vehicle/btVehicleRaycaster.h>
 
-class VehiclePhysicsModel : public PhysicsModel
+class Vehicle : public PhysicsModel
 {
 private:
+	btScalar engine_force;
 	btRigidBody* chassis;
 	btVehicleRaycaster* Raycaster;
 	btRaycastVehicle* RaycastModel;
@@ -15,67 +16,77 @@ public:
 	btTransform WheelTransform[4];
 	btTransform ChassisTransform;
 
-	VehiclePhysicsModel(btRigidBody* ChassisBody)
+	Vehicle(btDiscreteDynamicsWorld* world) :PhysicsModel(world)
 	{
-		RaycastModel->setCoordinateSystem(0, 1, 2);	//坐标顺序
-		chassis = ChassisBody;
-		btRaycastVehicle::btVehicleTuning tuning;	//计算相关参数
-		RaycastModel = new btRaycastVehicle(tuning, chassis, Raycaster);
-		btVector3 connectionPointCS[4] = { btVector3(-0.6f, 0.0f, 0.7f),btVector3(0.6f, 0.0f, 0.7f), btVector3(-0.6f, 0.0f, 0.7f), btVector3(0.6f, 0.0f, 0.7f) };	//轮胎位置
-		for (int i = 0; i < 4; i++)
-		{
-			btVector3 wheelDirectionCS0 = btVector3(0.0f, -1.0f, 0.0f);	//轮胎方向
-			btVector3 wheelAxleCS = btVector3(-1.0f, 0.0f, 0.0f);	//轮胎轴
-			btScalar suspensionRestLength = 0.1f;	//悬架长度
-			btScalar wheelRadius = 0.4f;	//轮胎半径
-			RaycastModel->addWheel(connectionPointCS[i], wheelDirectionCS0, wheelAxleCS, suspensionRestLength, wheelRadius, tuning, true);
-		}
-
+		collisionShape = new btBoxShape(btVector3(1.0f, 0.5f, 2.0f));
+		btTransform vehicleTransform;
+		vehicleTransform.setIdentity();
+		vehicleTransform.setOrigin(btVector3(0, 1, 0));
+		motionState = new btDefaultMotionState(vehicleTransform);
+		btScalar mass = 10.0;
+		btVector3 inertia(0, 0, 0);
+		collisionShape->calculateLocalInertia(mass, inertia);
+		btRigidBody::btRigidBodyConstructionInfo chassisRigidBodyCI(mass, motionState, collisionShape, inertia);
+		chassis = new btRigidBody(chassisRigidBodyCI);
+		chassis->setActivationState(DISABLE_DEACTIVATION);
 		dynamicsWorld->addRigidBody(chassis);
 	}
-	~VehiclePhysicsModel()
+	~Vehicle()
 	{
 		delete Raycaster;
 		delete RaycastModel;
 	}
-	void Speedup()
+	void InitVehicle()
 	{
-		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
-			RaycastModel->applyEngineForce(10, i);
+		btRaycastVehicle::btVehicleTuning tuning;	//计算相关参数
+		Raycaster = new btDefaultVehicleRaycaster(dynamicsWorld);
+		RaycastModel = new btRaycastVehicle(tuning, chassis, Raycaster);
+		RaycastModel->setCoordinateSystem(0, 1, 2);	//坐标顺序
+		btVector3 connectionPointCS[4] = { btVector3(-0.6f, 0.0f, 0.7f),btVector3(0.6f, 0.0f, 0.7f), btVector3(-0.6f, 0.0f,-0.7f), btVector3(0.6f, 0.0f, -0.7f) };	//轮胎位置
+		for (int i = 0; i < 4; i++)
+		{
+			btVector3 wheelDirectionCS0 = btVector3(0.0f, -1.0f, 0.0f);	//轮胎方向
+			btVector3 wheelAxleCS = btVector3(0.0f, 0.0f, -1.0f);	//轮胎轴
+			btScalar suspensionRestLength = 0.6f;	//悬架长度
+			btScalar wheelRadius = 0.5f;	//轮胎半径
+			RaycastModel->addWheel(connectionPointCS[i], wheelDirectionCS0, wheelAxleCS, suspensionRestLength, wheelRadius, tuning, true);
+		}
+		engine_force = 0;
+		dynamicsWorld->addVehicle(RaycastModel);
 	}
-	void Brake()
+	void Speedup(double control)
 	{
+		engine_force = 10 * control;
 		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
-			RaycastModel->applyEngineForce(-10, i);
+			RaycastModel->applyEngineForce(engine_force, i);
 	}
-	void Left()
+	void Steering(double control)
 	{
-		btScalar steering = RaycastModel->getSteeringValue(0);
+		btScalar steering_new = RaycastModel->getSteeringValue(0) + 1 * control;
+		if (fabs(control)< 1e-6)
+			steering_new = 0;
 		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
-			RaycastModel->setSteeringValue(steering + 1, i);
+			RaycastModel->setSteeringValue(steering_new, i);
 	}
-	void Right()
+	void updateTransform(double deltaTime)
 	{
-		btScalar steering = RaycastModel->getSteeringValue(0);
+		//RaycastModel->updateVehicle(deltaTime);
 		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
-			RaycastModel->setSteeringValue(steering - 1, i);
+		{
+			RaycastModel->updateWheelTransform(i, true);
+		}
+	}
+	glm::mat4 getTransform()
+	{
+		//chassis->getMotionState()->getWorldTransform(modelTransform);
+		modelTransform = RaycastModel->getChassisWorldTransform();
+		//std::cout << RaycastModel->getCurrentSpeedKmHour() << std::endl;
+		//std::cout << modelTransform.getOrigin().getX() << " " << modelTransform.getOrigin().getY() << " " << modelTransform.getOrigin().getZ() << std::endl;
+		glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY(), modelTransform.getOrigin().getZ()));
+		glm::mat4 rotation = glm::mat4(glm::quat(modelTransform.getRotation().getW(), modelTransform.getRotation().getX(), modelTransform.getRotation().getY(), modelTransform.getRotation().getZ()));
+		glm::mat4 worldTransform = translation * rotation;
+		return worldTransform;
 	}
 };
-class Vehicle : public Object
-{
-private:
-
-	//未加轮胎
-public:
-	Vehicle(Mesh mesh_from_object, btDiscreteDynamicsWorld* dynamicsWorld) : Object(mesh_from_object, dynamicsWorld)
-	{
-
-	}
-	~Vehicle()
-	{
-
-	}
-};
-
 
 #endif
