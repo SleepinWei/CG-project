@@ -20,6 +20,7 @@
 #include"../include/imgui/imgui_impl_glfw.h"
 #include"../include/imgui/imgui.h"
 #include"../include/imgui/imgui_impl_opengl3.h"
+#include"Grass.h"
 
 #include"Utils.h"
 
@@ -46,9 +47,6 @@ void physics() {
 	PhysicsManager* phyManager = new PhysicsManager();
 	Terrain* terrain = new Terrain("height_map.png");
 	phyManager->collisionShapes.push_back(terrain->heightFieldShape);
-	for (int i = 0; i < 150; i++) {
-		phyManager->debugDraw(true);
-	}
 }
 void renders() {
 	glfwInit();
@@ -80,14 +78,15 @@ void renders() {
 	DynamicSky* sky = new DynamicSky();
 	Shadow* shadow = new Shadow();
 	Plane* plane = new Plane();
+	Grass* grass = new Grass();
 	glm::vec3 lightPosition = glm::vec3(0.f, 20.f, -20.f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//Model car("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
-	Model car("../resources/objects/Avent_sport/Avent_sport.obj");
-	std::cout << car.length << std::endl;
-	std::cout << car.width << std::endl;
-	std::cout << car.height << std::endl;
+	//Model car("../resources/objects/Avent_sport/Avent_sport.obj");
+	//std::cout << car.length << std::endl;
+	//std::cout << car.width << std::endl;
+	//std::cout << car.height << std::endl;
 	//settings 
 
 	// configure depth map FBO
@@ -214,6 +213,9 @@ void renders() {
 		lightShader.setMat4("view", view);
 		lightShader.setMat4("model", lightModel);
 		renderCube();
+
+		//grass->update(deltaTime);
+		//grass->render();
 
 		sky->renderSky(camera);
 		glBindVertexArray(0);
