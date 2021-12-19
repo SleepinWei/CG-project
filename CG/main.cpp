@@ -140,7 +140,9 @@ void renders() {
 			ImGui::SliderFloat("Yaw", &camera.Yaw, -90.0f, 90.0f);
 			ImGui::SliderFloat("Pitch", &camera.Pitch, -90.0f, 90.0f);
 			ImGui::SliderFloat("Zoom", &camera.Zoom, 0.0f, 90.0f);
-
+			ImGui::SliderFloat("Vehicle_X", &vehicle.positionX, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Vehicle_Y", &vehicle.positionY, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Vehicle_Z", &vehicle.positionZ, -1000.0f, 1000.0f);
 			ImGui::End();
 		}
 		ImGui::Render();
@@ -233,8 +235,6 @@ void renders() {
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-
-
 		vehicle.getKeyboard(window, deltaTime);
 		vehicle.updateTransform(deltaTime);
 		physicsWorld.dynamicsWorld->stepSimulation(deltaTime);

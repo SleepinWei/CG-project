@@ -2,6 +2,7 @@
 #define VEHICLE_H
 
 #include "Object.h"
+#include<iomanip>
 #include <bullet/BulletDynamics/Vehicle/btRaycastVehicle.h>
 //#include <bullet/BulletDynamics/Vehicle/btVehicleRaycaster.h>
 
@@ -13,15 +14,18 @@ private:
 	btVehicleRaycaster* Raycaster;
 	btRaycastVehicle* RaycastModel;
 public:
+	btScalar positionX;
+	btScalar positionY;
+	btScalar positionZ;
 	btTransform WheelTransform[4];
 	btTransform ChassisTransform;
 
 	Vehicle(btDiscreteDynamicsWorld* world) :PhysicsModel(world)
 	{
 		collisionShape = new btBoxShape(btVector3(1.0f, 0.5f, 2.0f));
-		btTransform vehicleTransform;
-		vehicleTransform.setIdentity();
-		vehicleTransform.setOrigin(btVector3(0, 1, 0));
+
+		btQuaternion rotation = btQuaternion(btVector3(0, 1, 0), btScalar(6.28));
+		btTransform vehicleTransform(rotation, btVector3(0, 1, 0));
 		motionState = new btDefaultMotionState(vehicleTransform);
 		btScalar mass = 10.0;
 		btVector3 inertia(0, 0, 0);
@@ -39,17 +43,22 @@ public:
 	void InitVehicle()
 	{
 		btRaycastVehicle::btVehicleTuning tuning;	//¼ÆËãÏà¹Ø²ÎÊý
+		tuning.m_suspensionStiffness = 20.f;
+		tuning.m_suspensionCompression = 4.4f;
+		tuning.m_suspensionDamping = 2.3f;
+		tuning.m_frictionSlip = 1000;
 		Raycaster = new btDefaultVehicleRaycaster(dynamicsWorld);
 		RaycastModel = new btRaycastVehicle(tuning, chassis, Raycaster);
-		RaycastModel->setCoordinateSystem(0, 1, 2);	//×ø±êË³Ðò
-		btVector3 connectionPointCS[4] = { btVector3(-0.6f, 0.0f, 0.7f),btVector3(0.6f, 0.0f, 0.7f), btVector3(-0.6f, 0.0f,-0.7f), btVector3(0.6f, 0.0f, -0.7f) };	//ÂÖÌ¥Î»ÖÃ
+		RaycastModel->setCoordinateSystem(2, 1, 0);	//×ø±êË³Ðò
+		btVector3 connectionPointCS[4] = { btVector3(-0.6f, 0.5f, 0.7f),btVector3(0.6f, 0.5f, 0.7f), btVector3(-0.6f, 0.5f,-0.7f), btVector3(0.6f, 0.5f, -0.7f) };	//ÂÖÌ¥Î»ÖÃ
 		for (int i = 0; i < 4; i++)
 		{
 			btVector3 wheelDirectionCS0 = btVector3(0.0f, -1.0f, 0.0f);	//ÂÖÌ¥·½Ïò
 			btVector3 wheelAxleCS = btVector3(0.0f, 0.0f, -1.0f);	//ÂÖÌ¥Öá
 			btScalar suspensionRestLength = 0.6f;	//Ðü¼Ü³¤¶È
-			btScalar wheelRadius = 0.5f;	//ÂÖÌ¥°ë¾¶
-			RaycastModel->addWheel(connectionPointCS[i], wheelDirectionCS0, wheelAxleCS, suspensionRestLength, wheelRadius, tuning, true);
+			btScalar wheelRadius = 0.4f;	//ÂÖÌ¥°ë¾¶
+			bool front = (i < 2) ? true : false;
+			RaycastModel->addWheel(connectionPointCS[i], wheelDirectionCS0, wheelAxleCS, suspensionRestLength, wheelRadius, tuning, front);
 		}
 		engine_force = 0;
 		dynamicsWorld->addVehicle(RaycastModel);
@@ -60,21 +69,13 @@ public:
 		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
 			RaycastModel->applyEngineForce(engine_force, i);
 	}
-	void Steering(double control)
+	void Steering(double deltatime)
 	{
-		btScalar steering_new = RaycastModel->getSteeringValue(0) + 1 * control;
-		if (fabs(control)< 1e-6)
+		btScalar steering_new = RaycastModel->getSteeringValue(0) + 0.4 * deltatime;
+		if (fabs(deltatime) < 1e-6)
 			steering_new = 0;
 		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
 			RaycastModel->setSteeringValue(steering_new, i);
-	}
-	void updateTransform(double deltaTime)
-	{
-		//RaycastModel->updateVehicle(deltaTime);
-		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
-		{
-			RaycastModel->updateWheelTransform(i, true);
-		}
 	}
 	void getKeyboard(GLFWwindow* window, float deltaTime)
 	{
@@ -88,18 +89,30 @@ public:
 			Steering(deltaTime);
 		else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 			Steering(-deltaTime);
-		else
-			Steering(0);
 	}
 
+
+	void updateTransform(double deltaTime)
+	{
+		RaycastModel->updateVehicle(deltaTime);
+	}
+	void getPosition()
+	{
+		modelTransform = RaycastModel->getChassisWorldTransform();
+		positionX = modelTransform.getOrigin().getX();
+		positionY = modelTransform.getOrigin().getY();
+		positionZ = modelTransform.getOrigin().getZ();
+	}
 	glm::mat4 getTransform()
 	{
-		//chassis->getMotionState()->getWorldTransform(modelTransform);
-		modelTransform = RaycastModel->getChassisWorldTransform();
-		//std::cout << RaycastModel->getCurrentSpeedKmHour() << std::endl;
-		//std::cout << modelTransform.getOrigin().getX() << " " << modelTransform.getOrigin().getY() << " " << modelTransform.getOrigin().getZ() << std::endl;
-		glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY(), modelTransform.getOrigin().getZ()));
-		glm::mat4 rotation = glm::mat4(glm::quat(modelTransform.getRotation().getW(), modelTransform.getRotation().getX(), modelTransform.getRotation().getY(), modelTransform.getRotation().getZ()));
+		chassis->getMotionState()->getWorldTransform(modelTransform);
+		//btVector3 orient= chassis->getLinearVelocity();
+		//btQuaternion steering(btVector3(0, 1, 0), atan(orient.getZ()/ orient.getX()));
+		btQuaternion steering(btVector3(0, 1, 0), RaycastModel->getSteeringValue(0));
+		btTransform trans(steering, btVector3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY(), modelTransform.getOrigin().getZ()));
+		//modelTransform = RaycastModel->getChassisWorldTransform();
+		glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY() - 0.5, modelTransform.getOrigin().getZ()));
+		glm::mat4 rotation = glm::mat4(glm::quat(trans.getRotation().getW(), trans.getRotation().getX(), trans.getRotation().getY(), trans.getRotation().getZ()));
 		glm::mat4 worldTransform = translation * rotation;
 		return worldTransform;
 	}

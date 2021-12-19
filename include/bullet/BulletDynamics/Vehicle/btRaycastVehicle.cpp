@@ -4,8 +4,8 @@
  * Permission to use, copy, modify, distribute and sell this software
  * and its documentation for any purpose is hereby granted without fee,
  * provided that the above copyright notice appear in all copies.
- * Erwin Coumans makes no representations about the suitability 
- * of this software for any purpose.  
+ * Erwin Coumans makes no representations about the suitability
+ * of this software for any purpose.
  * It is provided "as is" without express or implied warranty.
 */
 
@@ -33,7 +33,7 @@ btRigidBody& btActionInterface::getFixedBody()
 
 btRaycastVehicle::btRaycastVehicle(const btVehicleTuning& tuning, btRigidBody* chassis, btVehicleRaycaster* raycaster)
 	: m_vehicleRaycaster(raycaster),
-	  m_pitchControl(btScalar(0.))
+	m_pitchControl(btScalar(0.))
 {
 	m_chassisBody = chassis;
 	m_indexRightAxis = 0;
@@ -446,10 +446,10 @@ struct btWheelContactPoint
 
 	btWheelContactPoint(btRigidBody* body0, btRigidBody* body1, const btVector3& frictionPosWorld, const btVector3& frictionDirectionWorld, btScalar maxImpulse)
 		: m_body0(body0),
-		  m_body1(body1),
-		  m_frictionPositionWorld(frictionPosWorld),
-		  m_frictionDirectionWorld(frictionDirectionWorld),
-		  m_maxImpulse(maxImpulse)
+		m_body1(body1),
+		m_frictionPositionWorld(frictionPosWorld),
+		m_frictionDirectionWorld(frictionDirectionWorld),
+		m_maxImpulse(maxImpulse)
 	{
 		btScalar denom0 = body0->computeImpulseDenominator(frictionPosWorld, frictionDirectionWorld);
 		btScalar denom1 = body1->computeImpulseDenominator(frictionPosWorld, frictionDirectionWorld);
@@ -536,8 +536,8 @@ void btRaycastVehicle::updateFriction(btScalar timeStep)
 				m_forwardWS[i].normalize();
 
 				resolveSingleBilateral(*m_chassisBody, wheelInfo.m_raycastInfo.m_contactPointWS,
-									   *groundObject, wheelInfo.m_raycastInfo.m_contactPointWS,
-									   btScalar(0.), m_axle[i], m_sideImpulse[i], timeStep);
+					*groundObject, wheelInfo.m_raycastInfo.m_contactPointWS,
+					btScalar(0.), m_axle[i], m_sideImpulse[i], timeStep);
 
 				m_sideImpulse[i] *= sideFrictionStiffness2;
 			}
@@ -627,7 +627,7 @@ void btRaycastVehicle::updateFriction(btScalar timeStep)
 			btWheelInfo& wheelInfo = m_wheelInfo[wheel];
 
 			btVector3 rel_pos = wheelInfo.m_raycastInfo.m_contactPointWS -
-								m_chassisBody->getCenterOfMassPosition();
+				m_chassisBody->getCenterOfMassPosition();
 
 			if (m_forwardImpulse[wheel] != btScalar(0.))
 			{
@@ -638,7 +638,7 @@ void btRaycastVehicle::updateFriction(btScalar timeStep)
 				class btRigidBody* groundObject = (class btRigidBody*)m_wheelInfo[wheel].m_raycastInfo.m_groundObject;
 
 				btVector3 rel_pos2 = wheelInfo.m_raycastInfo.m_contactPointWS -
-									 groundObject->getCenterOfMassPosition();
+					groundObject->getCenterOfMassPosition();
 
 				btVector3 sideImp = m_axle[wheel] * m_sideImpulse[wheel];
 
