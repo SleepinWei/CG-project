@@ -1,9 +1,5 @@
 
 #include<glad/glad.h>
-typedef unsigned long int DWORD;
-extern "C" {
-	_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-}
 #include<iostream>
 #include<glfw/glfw3.h>
 #include<glm/glm.hpp>
@@ -23,7 +19,6 @@ extern "C" {
 
 #include"Physics.h"
 #include"Vehicle.h"
-#include"Grass.h"
 //imgui 
 #include"../include/imgui/imgui_impl_glfw.h"
 #include"../include/imgui/imgui.h"
@@ -81,6 +76,7 @@ void renders() {
 	Shader shadowShader("../shader/parallel_light/shadow_mapping_depth.vs", "../shader/parallel_light/shadow_mapping_depth.fs");
 	Shader shader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
 	Shader lightShader("../shader/light.vs", "../shader/light.fs");
+	Shader modelShader("../shader/model.vs", "../shader/model.fs");
 
 	//Model model("../resources/objects/Avent_sport/Avent_sport.obj");
 
@@ -92,8 +88,8 @@ void renders() {
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//Model car("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
-	//Model car("../resources/objects/Avent_sport/Avent_sport.obj");
-	//Grass* grass = new Grass();
+	Model car("../resources/objects/Avent_sport/Avent_sport.obj");
+	Model raceTrackModel(("../resources/sceneResources/race-track/race-track.obj"));
 	//std::cout << car.length << std::endl;
 	//std::cout << car.width << std::endl;
 	//std::cout << car.height << std::endl;
@@ -146,10 +142,9 @@ void renders() {
 			ImGui::SliderFloat("Yaw", &camera.Yaw, -90.0f, 90.0f);
 			ImGui::SliderFloat("Pitch", &camera.Pitch, -90.0f, 90.0f);
 			ImGui::SliderFloat("Zoom", &camera.Zoom, 0.0f, 90.0f);
-			ImGui::Text("Car");
-			ImGui::SliderFloat("X", &vehicle.positionX, -1000.0f, 1000.0f);
-			ImGui::SliderFloat("Y", &vehicle.positionY, -1000.0f, 1000.0f);
-			ImGui::SliderFloat("Z", &vehicle.positionZ, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Vehicle_X", &vehicle.positionX, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Vehicle_Y", &vehicle.positionY, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Vehicle_Z", &vehicle.positionZ, -1000.0f, 1000.0f);
 			ImGui::End();
 		}
 		ImGui::Render();
@@ -179,6 +174,7 @@ void renders() {
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, plane->textureID);
+		//bind wood texture? why? 
 		glm::mat4 model = glm::mat4(1.0f);
 
 		glBindVertexArray(plane->VAO);
@@ -218,11 +214,12 @@ void renders() {
 		shader.setMat4("model", glm::mat4(1.0f));
 		glBindVertexArray(plane->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-
-
-		shader.setMat4("model", vehicle.getTransform());
-		//car.Draw(shader);
+		
+		modelShader.use();
+		modelShader.setMat4("projection", projection);
+		modelShader.setMat4("view", view);
+		modelShader.setMat4("model", vehicle.getTransform());
+		car.Draw(modelShader);
 		//renderCube();
 
 		lightShader.use();
@@ -233,9 +230,6 @@ void renders() {
 		lightShader.setMat4("view", view);
 		lightShader.setMat4("model", lightModel);
 		renderCube();
-
-		/*grass->update(deltaTime, camera);
-		grass->render(camera);*/
 
 		sky->renderSky(camera);
 		glBindVertexArray(0);
