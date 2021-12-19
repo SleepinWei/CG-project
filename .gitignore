@@ -35,3 +35,9 @@
 tempfile/
 *.cfg
 #resources/objects/
+
+*.tlog
+*.idb
+*.pdb
+*.ilk
+*.recipe
