@@ -76,6 +76,22 @@ public:
 			RaycastModel->updateWheelTransform(i, true);
 		}
 	}
+	void getKeyboard(GLFWwindow* window, float deltaTime)
+	{
+		if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+			Speedup(0.75);
+		else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+			Speedup(-0.75);
+		else
+			Speedup(0);
+		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+			Steering(deltaTime);
+		else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+			Steering(-deltaTime);
+		else
+			Steering(0);
+	}
+
 	glm::mat4 getTransform()
 	{
 		//chassis->getMotionState()->getWorldTransform(modelTransform);

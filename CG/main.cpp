@@ -215,7 +215,7 @@ void renders() {
 
 		shader.setMat4("model", vehicle.getTransform());
 		car.Draw(shader);
-		renderCube();
+		//renderCube();
 
 		lightShader.use();
 		glm::mat4 lightModel = glm::mat4(1.0f);
@@ -233,16 +233,9 @@ void renders() {
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
-		if (glfwGetKey(window, GLFW_KEY_UP))
-			vehicle.Speedup(0.75);
-		else if (glfwGetKey(window, GLFW_KEY_DOWN))
-			vehicle.Speedup(-0.75);
-		if (glfwGetKey(window, GLFW_KEY_LEFT))
-			vehicle.Steering(deltaTime);
-		else if (glfwGetKey(window, GLFW_KEY_RIGHT))
-			vehicle.Steering(-deltaTime);
-		else
-			vehicle.Steering(0);
+
+
+		vehicle.getKeyboard(window, deltaTime);
 		vehicle.updateTransform(deltaTime);
 		physicsWorld.dynamicsWorld->stepSimulation(deltaTime);
 	}
