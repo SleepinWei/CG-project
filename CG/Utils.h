@@ -151,18 +151,20 @@ void processInput(GLFWwindow* window, Vehicle& vehicle)
             enableCursor = !enableCursor;
         }
     }
-    else
+    
+    if(camera.fixed)
     {
-        double x = vehicle.positionX, y = vehicle.positionY, z = vehicle.positionZ;
+        glm::vec3 pos = vehicle.getPos();
         glm::vec3 front = vehicle.getFront();
+
+        double x = pos.x, y = pos.y, z = pos.z;
         double tox = front.x, toy = front.y, toz = front.z;
-        std::cout << x << " " << y << " " << z << " " << tox << " " << toy << " " << toz << std::endl;
         double len = sqrt(tox * tox + toz * toz);
-        x -= tox / len; z -= tox / len;
-        camera.Position = glm::vec3(x, y + 2.0f, y);
-        camera.Front = glm::vec3(tox, -0.05f, toz);
+        x += 10 * tox / len; z -= 10 * toz / len;
+        camera.Position = glm::vec3(x, y + 2.0f, z);
+        camera.Front = glm::vec3(-tox, -0.05f, toz);
         camera.Up = glm::vec3(0.0f, 1.0f, 0.0f);
-        camera.Right = glm::vec3(-toz, 0.0f, tox);
+        camera.Right = glm::vec3(toz, 0.0f, -tox);
         camera.WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     }
     
