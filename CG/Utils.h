@@ -105,6 +105,16 @@ int createWindow(GLFWwindow*& window,
     return 0;
 }
 
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+
+    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+    {
+        camera.fixed = !camera.fixed;
+    }
+}
 
 void processInput(GLFWwindow* window)
 {
@@ -113,8 +123,8 @@ void processInput(GLFWwindow* window)
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE)
-        camera.fixed = !camera.fixed;
+    glfwSetKeyCallback(window, key_callback);
+
     if (!camera.fixed)
     {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -125,21 +135,22 @@ void processInput(GLFWwindow* window)
             camera.ProcessKeyboard(LEFT, 3 * deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             camera.ProcessKeyboard(RIGHT, 3 * deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        {
+            if (!enableCursor)
+            {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                glfwSetCursorPosCallback(window, NULL);
+            }
+            else {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                glfwSetCursorPosCallback(window, mouse_callback);
+            }
+            enableCursor = !enableCursor;
+        }
     }
     
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-    {
-        if (!enableCursor)
-        {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            glfwSetCursorPosCallback(window, NULL);
-        }
-        else {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            glfwSetCursorPosCallback(window, mouse_callback);
-        }
-        enableCursor = !enableCursor;
-    }
+    
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -155,6 +166,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+    if (camera.fixed) return;
     if (firstMouse)
     {
         lastX = xpos;
