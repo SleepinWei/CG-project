@@ -89,7 +89,7 @@ void renders() {
 
 	//Model car("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
 	Model car("../resources/objects/Avent_sport/Avent_sport.obj");
-	Model raceTrackModel(("../resources/sceneResources/race-track/race-track.obj"));
+	Model raceTrackModel(("../resources/sceneResources/race-track/FullTrack.obj"));
 	//std::cout << car.length << std::endl;
 	//std::cout << car.width << std::endl;
 	//std::cout << car.height << std::endl;
@@ -218,11 +218,16 @@ void renders() {
 		shader.setMat4("model", glm::mat4(1.0f));
 		glBindVertexArray(plane->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
+		model = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f));
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -4.4f, 0.0f)) * model;
+		shader.setMat4("model", model);
+		raceTrackModel.Draw(shader);
 		
 		modelShader.use();
 		modelShader.setMat4("projection", projection);
 		modelShader.setMat4("view", view);
 		modelShader.setMat4("model", vehicle.getTransform());
+		
 		car.Draw(modelShader);
 		//renderCube();
 
