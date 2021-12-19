@@ -13,9 +13,11 @@
 #include<iostream>
 #include<glfw/glfw3.h>
 #include"Camera.h"
+#include"Vehicle.h"
 #include<imgui/imgui.h>
 #include<imgui/imgui_impl_glfw.h>
 #include<imgui/imgui_impl_opengl3.h>
+#include<cmath>
 //#include<imgui/imgui_impl_opengl3_loader.h>
 //#include
 
@@ -105,16 +107,26 @@ int createWindow(GLFWwindow*& window,
     return 0;
 }
 
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
 
-void processInput(GLFWwindow* window)
+    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+    {
+        camera.fixed = !camera.fixed;
+    }
+}
+
+void processInput(GLFWwindow* window, Vehicle& vehicle)
 {
     static bool enableCursor = false;
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_C) == GLFW_RELEASE)
-        camera.fixed = !camera.fixed;
+    glfwSetKeyCallback(window, key_callback);
+
     if (!camera.fixed)
     {
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -125,21 +137,35 @@ void processInput(GLFWwindow* window)
             camera.ProcessKeyboard(LEFT, 3 * deltaTime);
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
             camera.ProcessKeyboard(RIGHT, 3 * deltaTime);
+        if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+        {
+            if (!enableCursor)
+            {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+                glfwSetCursorPosCallback(window, NULL);
+            }
+            else {
+                glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+                glfwSetCursorPosCallback(window, mouse_callback);
+            }
+            enableCursor = !enableCursor;
+        }
+    }
+    else
+    {
+        double x = vehicle.positionX, y = vehicle.positionY, z = vehicle.positionZ;
+        glm::vec3 front = vehicle.getFront();
+        double tox = front.x, toy = front.y, toz = front.z;
+        std::cout << x << " " << y << " " << z << " " << tox << " " << toy << " " << toz << std::endl;
+        double len = sqrt(tox * tox + toz * toz);
+        x -= tox / len; z -= tox / len;
+        camera.Position = glm::vec3(x, y + 2.0f, y);
+        camera.Front = glm::vec3(tox, -0.05f, toz);
+        camera.Up = glm::vec3(0.0f, 1.0f, 0.0f);
+        camera.Right = glm::vec3(-toz, 0.0f, tox);
+        camera.WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
     }
     
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-    {
-        if (!enableCursor)
-        {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            glfwSetCursorPosCallback(window, NULL);
-        }
-        else {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            glfwSetCursorPosCallback(window, mouse_callback);
-        }
-        enableCursor = !enableCursor;
-    }
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
@@ -155,6 +181,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 // -------------------------------------------------------
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
+    if (camera.fixed) return;
     if (firstMouse)
     {
         lastX = xpos;
