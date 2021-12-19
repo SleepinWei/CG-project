@@ -76,6 +76,7 @@ void renders() {
 	Shader shadowShader("../shader/parallel_light/shadow_mapping_depth.vs", "../shader/parallel_light/shadow_mapping_depth.fs");
 	Shader shader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
 	Shader lightShader("../shader/light.vs", "../shader/light.fs");
+	Shader modelShader("../shader/model.vs", "../shader/model.fs");
 
 	//Model model("../resources/objects/Avent_sport/Avent_sport.obj");
 
@@ -88,6 +89,7 @@ void renders() {
 
 	//Model car("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
 	Model car("../resources/objects/Avent_sport/Avent_sport.obj");
+	Model raceTrackModel(("../resources/sceneResources/race-track/race-track.obj"));
 	//std::cout << car.length << std::endl;
 	//std::cout << car.width << std::endl;
 	//std::cout << car.height << std::endl;
@@ -212,11 +214,12 @@ void renders() {
 		shader.setMat4("model", glm::mat4(1.0f));
 		glBindVertexArray(plane->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-
-
-
-		shader.setMat4("model", vehicle.getTransform());
-		car.Draw(shader);
+		
+		modelShader.use();
+		modelShader.setMat4("projection", projection);
+		modelShader.setMat4("view", view);
+		modelShader.setMat4("model", vehicle.getTransform());
+		car.Draw(modelShader);
 		//renderCube();
 
 		lightShader.use();
