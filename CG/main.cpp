@@ -76,8 +76,8 @@ void renders() {
 	Shader shadowShader("../shader/parallel_light/shadow_mapping_depth.vs", "../shader/parallel_light/shadow_mapping_depth.fs");
 	Shader shader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
 	Shader lightShader("../shader/light.vs", "../shader/light.fs");
-	//Shader modelShader("../shader/model.vs", "../shader/model.fs");
-	Shader modelShader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
+	Shader modelShader("../shader/model.vs", "../shader/model.fs");
+	//Shader modelShader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
 
 	//Model model("../resources/objects/Avent_sport/Avent_sport.obj");
 
@@ -231,7 +231,17 @@ void renders() {
 		modelShader.setMat4("projection", projection);
 		modelShader.setMat4("view", view);
 		modelShader.setMat4("model", vehicle.getTransform());
-		
+		modelShader.setVec3("viewPos", camera.Position);
+		modelShader.setVec3("lightPos", lightPosition);
+		modelShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+		modelShader.setMat4("lightView", lightView);
+		modelShader.setFloat("zNear", 1.0f);
+		modelShader.setVec2("planeSize", glm::vec2(20.f, 20.f));
+		modelShader.setVec2("lightSize", glm::vec2(5.f, 5.f));
+		//shader.setMat4("projection", projection);
+		//shader.setMat4("view", view);
+		//shader.setMat4("model", vehicle.getTransform() * glm::scale(glm::vec3(0.2f)));
+
 		car.Draw(modelShader);
 		//renderCube();
 
