@@ -13,9 +13,11 @@
 #include<iostream>
 #include<glfw/glfw3.h>
 #include"Camera.h"
+#include"Vehicle.h"
 #include<imgui/imgui.h>
 #include<imgui/imgui_impl_glfw.h>
 #include<imgui/imgui_impl_opengl3.h>
+#include<cmath>
 //#include<imgui/imgui_impl_opengl3_loader.h>
 //#include
 
@@ -116,7 +118,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
 }
 
-void processInput(GLFWwindow* window)
+void processInput(GLFWwindow* window, Vehicle& vehicle)
 {
     static bool enableCursor = false;
 
@@ -149,7 +151,20 @@ void processInput(GLFWwindow* window)
             enableCursor = !enableCursor;
         }
     }
-    
+    else
+    {
+        double x = vehicle.positionX, y = vehicle.positionY, z = vehicle.positionZ;
+        glm::vec3 front = vehicle.getFront();
+        double tox = front.x, toy = front.y, toz = front.z;
+        std::cout << x << " " << y << " " << z << " " << tox << " " << toy << " " << toz << std::endl;
+        double len = sqrt(tox * tox + toz * toz);
+        x -= tox / len; z -= tox / len;
+        camera.Position = glm::vec3(x, y + 2.0f, y);
+        camera.Front = glm::vec3(tox, -0.05f, toz);
+        camera.Up = glm::vec3(0.0f, 1.0f, 0.0f);
+        camera.Right = glm::vec3(-toz, 0.0f, tox);
+        camera.WorldUp = glm::vec3(0.0f, 1.0f, 0.0f);
+    }
     
 }
 

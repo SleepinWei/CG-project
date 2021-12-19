@@ -6,6 +6,8 @@
 #include <bullet/BulletDynamics/Vehicle/btRaycastVehicle.h>
 //#include <bullet/BulletDynamics/Vehicle/btVehicleRaycaster.h>
 
+const double pi = 3.14159265359;
+
 class Vehicle : public PhysicsModel
 {
 private:
@@ -78,17 +80,17 @@ public:
 		{
 			steer_cur = atan(orient.getZ() / (-orient.getX()));
 			if (-orient.getX() < -1 && orient.getZ() > 1)
-				steer_cur += 3.14;
+				steer_cur += pi;
 			else if (-orient.getX() < -1e-1 && orient.getZ() < -1e-1)
-				steer_cur -= 3.14;
+				steer_cur -= pi;
 			if (fabs(RaycastModel->getSteeringValue(0) - steer_cur) > 0.5)	//ÔÚµ¹³µ
 				steer_cur = RaycastModel->getSteeringValue(0);
 		}
 		btScalar steering_new = steer_cur + 0.4 * deltatime;
-		if (steering_new > 3.14)
-			steering_new -= 6.28;
-		else if (steering_new < -3.14)
-			steering_new += 6.28;
+		if (steering_new > pi)
+			steering_new -= 2 * pi;
+		else if (steering_new < -pi)
+			steering_new += 2 * pi;
 		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
 			RaycastModel->setSteeringValue(steering_new, i);
 	}
@@ -129,6 +131,12 @@ public:
 		glm::mat4 rotation = glm::mat4(glm::quat(trans.getRotation().getW(), trans.getRotation().getX(), trans.getRotation().getY(), trans.getRotation().getZ()));
 		glm::mat4 worldTransform = translation * rotation;
 		return worldTransform;
+	}
+	glm::vec3 getFront()
+	{
+		btQuaternion steering(btVector3(0, 1, 0), RaycastModel->getSteeringValue(0));
+		btTransform trans(steering, btVector3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY(), modelTransform.getOrigin().getZ()));
+		return glm::vec3(trans.getRotation().getX(), trans.getRotation().getY(), trans.getRotation().getZ());
 	}
 };
 

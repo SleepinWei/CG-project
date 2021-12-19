@@ -118,7 +118,7 @@ void renders() {
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		processInput(window);
+		processInput(window, vehicle);
 
 		//1. Camera Movement
 
