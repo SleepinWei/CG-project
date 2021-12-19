@@ -9,6 +9,7 @@
 #include<random>
 //#include<shader/Shader.h>
 #include"ComplexShader.h"
+#include"Camera.h"
 //typedef ComplexShader Shader;
 
 struct NumBlades {
@@ -37,8 +38,12 @@ std::vector<Blade> generate_blades()
 	std::uniform_real_distribution<float> dis(-1, 1);
 
 	std::vector<Blade> blades;
-	for (int i = -200; i < 200; ++i) {
-		for (int j = -200; j < 200; ++j) {
+
+	std::cout << "successful:entering blades" << '\n';
+
+	int size = 10;
+	for (int i = -size; i < size; ++i) {
+		for (int j = -size; j < size; ++j) {
 			const auto x = static_cast<float>(i) / 10 - 1 + dis(gen) * 0.1f;
 			const auto y = static_cast<float>(j) / 10 - 1 + dis(gen) * 0.1f;
 			const auto blade_height = height_dis(gen);
@@ -50,6 +55,9 @@ std::vector<Blade> generate_blades()
 				glm::vec4(0, blade_height, 0, 0.7f + dis(gen) * 0.3f));
 		}
 	}
+
+	std::cout << "successful:quitting blades" << '\n';
+
 	return blades;
 }
 
@@ -82,10 +90,14 @@ public:
 		const std::vector<Blade> blades = generate_blades();
 		bladesCount = static_cast<GLuint>(blades.size());
 
-		glPatchParameteri(GL_PATCH_VERTICES, 1);
+		std::cout << "successful:entering VAO binding" << '\n';
 
+		
+		
 		glGenVertexArrays(1, &VAO);
 		glBindVertexArray(VAO);
+		glPatchParameteri(GL_PATCH_VERTICES, 1); //fucking why? This line is causing error but I just fucking don't konw the fucking reason 
+		std::cout << "successful:1" << '\n';
 
 		unsigned int grass_input_buffer = 0;
 		glGenBuffers(1, &grass_input_buffer);
@@ -96,6 +108,8 @@ public:
 			blades.data(), GL_DYNAMIC_COPY);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, grass_input_buffer);
 
+		std::cout << "successful:input buffer" << '\n';
+
 		unsigned int grass_output_buffer = 0;
 		glGenBuffers(1, &grass_output_buffer);
 		glBindBuffer(GL_SHADER_STORAGE_BUFFER, grass_output_buffer);
@@ -103,6 +117,8 @@ public:
 			static_cast<GLsizei>(blades.size() * sizeof(Blade)), nullptr,
 			GL_STREAM_DRAW);
 		glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, grass_output_buffer);
+
+		std::cout << "successful:quitting VAO binding" << '\n';
 
 		NumBlades numBlades;
 		unsigned int grass_indirect_buffer = 0;
@@ -133,10 +149,15 @@ public:
 			reinterpret_cast<void*>(offsetof(Blade, up)));
 		glEnableVertexAttribArray(3);
 
+		//test
+		std::cout << "successful" << std::endl;
+		//
+		
 		ShaderBuilder builder;
 		computeShader = builder.load("grass.comp.glsl", ComplexShader::Type::Compute).build();
 		computeShader->use();
 		
+
 		ShaderBuilder grassBuilder;
 		grassShader = grassBuilder
 			.load("grass.vert.glsl", ComplexShader::Type::Vertex)
@@ -147,7 +168,7 @@ public:
 		//test
 		std::cout << "successful" <<"\n";
 	}
-	void update(float delta_time) {
+	void update(float delta_time,Camera& camera) {
 		computeShader->use();
 		computeShader->setFloat("current_time",
 			static_cast<float>(glfwGetTime()));
@@ -155,14 +176,18 @@ public:
 		computeShader->setFloat("wind_magnitude", wind_magnitude);
 		computeShader->setFloat("wind_wave_length", wind_wave_length);
 		computeShader->setFloat("wind_wave_period", wind_wave_period);
+		computeShader->setMat4("view", camera.GetViewMatrix());
+		computeShader->setMat4("proj", glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 1000.0f));
 
 		glDispatchCompute(static_cast<GLuint>(bladesCount), 1, 1);
 	}
-	void render() {
+	void render(Camera& camera) {
 		glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 
 		glBindVertexArray(VAO);
 		grassShader->use();
+		grassShader->setMat4("view", camera.GetViewMatrix());
+		grassShader->setMat4("proj", glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 1.0f, 1000.0f));
 		glDrawArraysIndirect(GL_PATCHES, reinterpret_cast<void*>(0));
 	}
 };

@@ -1,5 +1,9 @@
 
 #include<glad/glad.h>
+typedef unsigned long int DWORD;
+extern "C" {
+	_declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+}
 #include<iostream>
 #include<glfw/glfw3.h>
 #include<glm/glm.hpp>
@@ -19,6 +23,7 @@
 
 #include"Physics.h"
 #include"Vehicle.h"
+#include"Grass.h"
 //imgui 
 #include"../include/imgui/imgui_impl_glfw.h"
 #include"../include/imgui/imgui.h"
@@ -87,7 +92,8 @@ void renders() {
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//Model car("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
-	Model car("../resources/objects/Avent_sport/Avent_sport.obj");
+	//Model car("../resources/objects/Avent_sport/Avent_sport.obj");
+	//Grass* grass = new Grass();
 	//std::cout << car.length << std::endl;
 	//std::cout << car.width << std::endl;
 	//std::cout << car.height << std::endl;
@@ -140,9 +146,10 @@ void renders() {
 			ImGui::SliderFloat("Yaw", &camera.Yaw, -90.0f, 90.0f);
 			ImGui::SliderFloat("Pitch", &camera.Pitch, -90.0f, 90.0f);
 			ImGui::SliderFloat("Zoom", &camera.Zoom, 0.0f, 90.0f);
-			ImGui::SliderFloat("Vehicle_X", &vehicle.positionX, -1000.0f, 1000.0f);
-			ImGui::SliderFloat("Vehicle_Y", &vehicle.positionY, -1000.0f, 1000.0f);
-			ImGui::SliderFloat("Vehicle_Z", &vehicle.positionZ, -1000.0f, 1000.0f);
+			ImGui::Text("Car");
+			ImGui::SliderFloat("X", &vehicle.positionX, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Y", &vehicle.positionY, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Z", &vehicle.positionZ, -1000.0f, 1000.0f);
 			ImGui::End();
 		}
 		ImGui::Render();
@@ -172,7 +179,6 @@ void renders() {
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, plane->textureID);
-		//bind wood texture? why? 
 		glm::mat4 model = glm::mat4(1.0f);
 
 		glBindVertexArray(plane->VAO);
@@ -216,7 +222,7 @@ void renders() {
 
 
 		shader.setMat4("model", vehicle.getTransform());
-		car.Draw(shader);
+		//car.Draw(shader);
 		//renderCube();
 
 		lightShader.use();
@@ -227,6 +233,9 @@ void renders() {
 		lightShader.setMat4("view", view);
 		lightShader.setMat4("model", lightModel);
 		renderCube();
+
+		/*grass->update(deltaTime, camera);
+		grass->render(camera);*/
 
 		sky->renderSky(camera);
 		glBindVertexArray(0);

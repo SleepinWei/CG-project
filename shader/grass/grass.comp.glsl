@@ -5,10 +5,8 @@ layout(local_size_x = WORKGROUP_SIZE,
 local_size_y = 1,
 local_size_z = 1) in;
 
-layout(binding = 0) uniform CameraBufferObject {
-    mat4 view;
-    mat4 proj;
-} camera;
+uniform mat4 view;
+uniform mat4 proj;
 
 uniform float current_time;
 uniform float delta_time;
@@ -66,8 +64,8 @@ void main() {
     float stiffness = inputBlades[index].up.w;
 
     // Frustum culling
-    vec4 v0ClipSpace = camera.proj * camera.view * vec4(v0, 1);
-    vec4 v1ClipSpace = camera.proj * camera.view * vec4(v1, 1);
+    vec4 v0ClipSpace = proj * view * vec4(v0, 1);
+    vec4 v1ClipSpace = proj * view * vec4(v1, 1);
     v0ClipSpace /= v0ClipSpace.w;
     v1ClipSpace /= v1ClipSpace.w;
 
