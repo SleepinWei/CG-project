@@ -26,16 +26,19 @@ unsigned int loadTexture(const char* path);
 unsigned int loadCubemap(vector<std::string> faces);
 
 
-void  drawCar(Model& model, Shader& shader);
+//void  drawCar(Model& model, Shader& shader, unsigned int diffuseMapStreetLight, unsigned int normalMapStreetLight);
+void drawCar(Model& model, Shader& shader);
 void drawRaceTrack(Model& model, Shader& shader);
-void drawStreetLights1(Model& model, Shader& shader);
-void drawStreetLights2(Model& model, Shader& shader);
+
+void drawStreetLights1(Model& model, Shader& shader,unsigned int,unsigned int);
+void drawLimitSign(Model& model, Shader& shader, unsigned int, unsigned int);
+
 void drawStopSign1(Model& model, Shader& shader);
+void drawStreetLights2(Model& model, Shader& shader);
 void drawTrafficSign(Model& model, Shader& shader);
-void drawLimitSign(Model& model, Shader& shader);
-void drawHouse(Model& model, Model&, Model& wood, Shader& shader);
+void drawHouse(Model& model,Model& , Model& wood,Shader& shader);
 void drawCone(Model& model, Shader& shader);
-void drawPlane(Model& model, Model& model2, Shader& shader);
+void drawPlane(Model& model,Model& model2, Shader& shader);
 
 
 
@@ -43,7 +46,7 @@ void drawPlane(Model& model, Model& model2, Shader& shader);
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-glm::vec3 cameraPos(0.0f, 2.0f, 5.0f);
+glm::vec3 cameraPos(0.0f, 10.0f, 10.0f);
 Camera camera(cameraPos);
 
 
@@ -189,7 +192,7 @@ int main()
 
 	//以下用modelShader
 	Model cottage1("../resources/sceneResources/house/cottage1/medieval house.obj");
-	Model cottage2("../resources/sceneResources/house/cottage2/Snow covered CottageOBJ.obj");
+	Model cottage2("../resources/sceneResources/house/cottage2/Snow covered CottageOBJ.obj");	
 	Model cone("../resources/sceneResources/roadcone/cone2_obj.obj");
 	Model wood("../resources/sceneResources/wood/trunk wood.obj");
 	Model plane("../resources/sceneResources/plane/Crash_plane_brothel.obj");
@@ -217,28 +220,22 @@ int main()
 
 	Shader normalShader("../resources/sceneResources/shader/normal_mapping.vs", "../resources/sceneResources/shader/normal_mapping.fs");
 	normalShader.use();
-	normalShader.setInt("diffuseMap", 15);
-	normalShader.setInt("normalMap", 14);
+
 
 	unsigned int diffuseMapStreetLight = loadTexture((char*)("../resources/sceneResources/StreetLamp/light/lamba_DefaultMaterial_BaseColor.png"));
 	unsigned int normalMapStreetLight = loadTexture((char*)("../resources/sceneResources/StreetLamp/light/lamba_DefaultMaterial_Normal.png"));
 
-	glActiveTexture(GL_TEXTURE15);
-	glBindTexture(GL_TEXTURE_2D, diffuseMapStreetLight);
-	glActiveTexture(GL_TEXTURE14);
-	glBindTexture(GL_TEXTURE_2D, normalMapStreetLight);
-
-
+	
 	unsigned int diffuseMapLimitSign = loadTexture((char*)("../resources/sceneResources/StreetLamp/limitSign/Speed Limit Sign (70 MPH).jpg"));
 	unsigned int normalMapLimitSign = loadTexture((char*)("../resources/sceneResources/StreetLamp/limitSign/NormalMap.png"));
 
-	glActiveTexture(GL_TEXTURE13);
-	glBindTexture(GL_TEXTURE_2D, diffuseMapLimitSign);
-	glActiveTexture(GL_TEXTURE12);
-	glBindTexture(GL_TEXTURE_2D, normalMapLimitSign);
+	/*unsigned int diffuseCar = loadTexture((char*)("../resources/objects/Avent_sport/diffuse.jpg"));
+	unsigned int normalCar = loadTexture((char*)("../resources/objects/Avent_sport/NormalMap.png"));*/
 
 
-	Shader modelShader("../resources/sceneResources//shader/normal_mapping.vs", "../resources/sceneResources//shader/normal_mapping.fs");
+
+
+	Shader modelShader("../resources/sceneResources/shader/normal_mapping.vs", "../resources/sceneResources/shader/normal_mapping.fs");
 	modelShader.use();
 
 
@@ -268,10 +265,10 @@ int main()
 
 
 
-		drawCar(carModel, envirShader);
+		drawCar(carModel,modelShader);
 		drawRaceTrack(raceTrackModel, shader);
-		drawStreetLights1(streetLight1, normalShader);
-		drawLimitSign(limitSignModel, normalShader);
+		drawStreetLights1(streetLight1, normalShader, diffuseMapStreetLight, normalMapStreetLight);
+		drawLimitSign(limitSignModel, normalShader, diffuseMapLimitSign, normalMapLimitSign);
 
 		drawStopSign1(stopSignModel, modelShader);
 		drawTrafficSign(trafficSignModel, modelShader);
@@ -448,25 +445,27 @@ unsigned int loadCubemap(vector<std::string> faces)
 	return textureID;
 }
 
-
-void  drawCar(Model& model, Shader& shader)
+void drawCar(Model& model, Shader& shader)
+//void  drawCar(Model& model, Shader& shader,unsigned int diffuseMapStreetLight,unsigned int normalMapStreetLight)
 {
 
 	glm::mat4 model_0 = glm::mat4(1.0f);
-	model_0 = glm::translate(model_0, glm::vec3(0.0f, 0.1f, 0.0f)); // translate it down so it's at the center of the scene
-	model_0 = glm::scale(model_0, glm::vec3(0.4f));	// it's a bit too big for our scene, so scale it down
-
+	model_0 = glm::translate(model_0, glm::vec3(0.0f, 1.5f, 0.0f)); // translate it down so it's at the center of the scene
+	//model_0 = glm::rotate(model_0, glm::radians(-90.0f),glm::vec3(1.0f, .0f, 0.0f)); // translate it down so it's at the center of the scene
+	model_0 = glm::scale(model_0, glm::vec3(1.0f));	// it's a bit too big for our scene, so scale it down
+	
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
-
+	
 	shader.use();
+
 	shader.setMat4("model", model_0);
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
 	shader.setVec3("cameraPos", camera.Position);
 
-
+    
 
 	model.Draw(shader);
 
@@ -494,13 +493,14 @@ void drawRaceTrack(Model& model, Shader& shader)
 	model.Draw(shader);
 }
 
-void drawStreetLights1(Model& model, Shader& shader)
+void drawStreetLights1(Model& model, Shader& shader, unsigned int diffuseMapStreetLight, unsigned int normalMapStreetLight)
 {
 	glm::mat4 _model = glm::mat4(1.0f);
 	//_model = glm::translate(_model, glm::vec3(-100.0f, .0f, 50.0f));
 
-	_model = glm::translate(_model, glm::vec3(-80.0f, 0.0f, 0.0f));
+	_model = glm::translate(_model, glm::vec3(-70.0f, 2.0f, 0.0f));
 	_model = glm::rotate(_model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	_model = glm::scale(_model, glm::vec3(6.0f));
 
 
 	glm::mat4 view = camera.GetViewMatrix();
@@ -512,6 +512,14 @@ void drawStreetLights1(Model& model, Shader& shader)
 
 
 	shader.use();
+	shader.setInt("diffuseMap", 14);
+	shader.setInt("normalMap", 13);
+
+	glActiveTexture(GL_TEXTURE14);
+	glBindTexture(GL_TEXTURE_2D, diffuseMapStreetLight);
+	glActiveTexture(GL_TEXTURE13);
+	glBindTexture(GL_TEXTURE_2D, normalMapStreetLight);
+
 	shader.setMat4("model", _model);
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
@@ -522,14 +530,24 @@ void drawStreetLights1(Model& model, Shader& shader)
 
 
 	_model = glm::mat4(1.0f);
-	_model = glm::translate(_model, glm::vec3(-100.0f, 0.0f, -20.0f));
-	_model = glm::rotate(_model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	_model = glm::translate(_model, glm::vec3(+155.0f, 2.0f, -3.0f));
+	_model = glm::rotate(_model, glm::radians(120.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	_model = glm::scale(_model, glm::vec3(6.0f));
 
 
 	view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+    projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
 	// draw scene as normal
+
+	shader.use();
+
+	shader.setMat4("model", _model);
+	shader.setMat4("view", view);
+	shader.setMat4("projection", projection);
+	shader.setVec3("cameraPos", camera.Position);
+
+	model.Draw(shader);
 
 
 	//画第一条道路的内圈
@@ -541,7 +559,7 @@ void drawStreetLights1(Model& model, Shader& shader)
 			_model = glm::translate(_model, glm::vec3(10.0f, 0.0f, -11.0f));
 		else
 			_model = glm::translate(_model, glm::vec3(10.0f, 0.0f, -10.7f));
-
+			
 
 
 
@@ -555,7 +573,7 @@ void drawStreetLights1(Model& model, Shader& shader)
 	}
 
 	glm::mat4 model2 = _model;*/
-
+	
 }
 
 void drawStreetLights2(Model& model, Shader& shader)
@@ -587,9 +605,9 @@ void drawStopSign1(Model& model, Shader& shader)
 	//_model = glm::translate(_model, glm::vec3(0.0f,0.1f,0.0f));
 
 
-	_model = glm::translate(_model, glm::vec3(20.0, 0.0f, 0.0f));
+	_model = glm::translate(_model, glm::vec3(20.0, 7.0f, 0.0f));
 	_model = glm::rotate(_model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	//_model = glm::scale(_model, glm::vec3(2.0f));
+	_model = glm::scale(_model, glm::vec3(3.0f));
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -615,9 +633,9 @@ void drawTrafficSign(Model& model, Shader& shader)
 	glm::mat4 _model = glm::mat4(1.0f);
 	//_model = glm::translate(_model, glm::vec3(0.0f,0.1f,0.0f));
 
-	_model = glm::translate(_model, glm::vec3(80.0, 2.0f, 60.0f));
+	_model = glm::translate(_model, glm::vec3(80.0, 3.0f, 60.0f));
 	_model = glm::rotate(_model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	_model = glm::scale(_model, glm::vec3(0.1f));
+	_model = glm::scale(_model, glm::vec3(1.0f));
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -639,18 +657,17 @@ void drawTrafficSign(Model& model, Shader& shader)
 		//_model = glm::translate(_model, glm::vec3(0.0f,0.1f,0.0f));
 
 		if (i == 0)
-			_model = glm::translate(_model, glm::vec3(-200.0, 0.1f, 330.0f));
+			_model = glm::translate(_model, glm::vec3(-200.0, 8.1f, 330.0f));
 		if (i == 1)
-			_model = glm::translate(_model, glm::vec3(+200.0, 0.1f, 300.0f));
+			_model = glm::translate(_model, glm::vec3(+200.0, 8.1f, 300.0f));
 		if (i == 2)
-			_model = glm::translate(_model, glm::vec3(-270.0, 0.1f, +350.0f));
+			_model = glm::translate(_model, glm::vec3(-270.0, 8.1f, +350.0f));
 		if (i == 3)
-			_model = glm::translate(_model, glm::vec3(-270.0, 0.1f, -350.0f));
+			_model = glm::translate(_model, glm::vec3(-270.0, 8.1f, -350.0f));
 
 
-		_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		//_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		_model = glm::scale(_model, glm::vec3(0.1f));
+		_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		_model = glm::scale(_model, glm::vec3(1.0f));
 
 
 		// draw scene as normal
@@ -669,20 +686,28 @@ void drawTrafficSign(Model& model, Shader& shader)
 }
 
 
-void drawLimitSign(Model& model, Shader& shader)
+void drawLimitSign(Model& model, Shader& shader,unsigned int diffuseMapLimitSign, unsigned int  normalMapLimitSign)
 {
 	glm::mat4 _model = glm::mat4(1.0f);
 	//_model = glm::translate(_model, glm::vec3(0.0f,0.1f,0.0f));
 
-	_model = glm::translate(_model, glm::vec3(+390.0, 0.1f, -350.0f));
+	_model = glm::translate(_model, glm::vec3(+390.0, 2.1f, -350.0f));
 	_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	_model = glm::scale(_model, glm::vec3(0.1f));
+	_model = glm::scale(_model, glm::vec3(0.15f));
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
 	// draw scene as normal
 	shader.use();
+	glActiveTexture(GL_TEXTURE12);
+	glBindTexture(GL_TEXTURE_2D, diffuseMapLimitSign);
+	glActiveTexture(GL_TEXTURE11);
+	glBindTexture(GL_TEXTURE_2D, normalMapLimitSign);
+	shader.setInt("diffuseMap", 12);
+	shader.setInt("normalMap", 11);
+
+
 	shader.setMat4("model", _model);
 	shader.setMat4("view", view);
 	shader.setMat4("projection", projection);
@@ -696,16 +721,16 @@ void drawLimitSign(Model& model, Shader& shader)
 		//_model = glm::translate(_model, glm::vec3(0.0f,0.1f,0.0f));
 
 		if (i == 0)
-			_model = glm::translate(_model, glm::vec3(-200.0, 0.1f, 0.0f));
+			_model = glm::translate(_model, glm::vec3(-200.0, 2.1f, 0.0f));
 		if (i == 1)
-			_model = glm::translate(_model, glm::vec3(+200.0, 0.1f, 0.0f));
+			_model = glm::translate(_model, glm::vec3(+200.0, 2.1f, 0.0f));
 		if (i == 2)
-			_model = glm::translate(_model, glm::vec3(-370.0, 0.1f, +350.0f));
+			_model = glm::translate(_model, glm::vec3(-370.0, 2.1f, +350.0f));
 
-
+	
 		_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		//_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		_model = glm::scale(_model, glm::vec3(0.03f));
+		_model = glm::scale(_model, glm::vec3(0.15f));
 
 		shader.use();
 		shader.setMat4("model", _model);
@@ -716,19 +741,19 @@ void drawLimitSign(Model& model, Shader& shader)
 		model.Draw(shader);
 
 	}
-
+	
 }
 
 
-void drawHouse(Model& model, Model& model2, Model& wood, Shader& shader)
+void drawHouse(Model& model,Model& model2,Model& wood, Shader& shader)
 {
 	glm::mat4 _model = glm::mat4(1.0f);
 	//_model = glm::translate(_model, glm::vec3(0.0f,0.1f,0.0f));
 
 
-	_model = glm::translate(_model, glm::vec3(-320.0, 0.1f, -340.0f));
+	_model = glm::translate(_model, glm::vec3(-320.0, 2.1f, -340.0f));
 	//_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	//_model = glm::scale(_model, glm::vec3(0.01f));
+	_model = glm::scale(_model, glm::vec3(6.0f));
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -745,13 +770,13 @@ void drawHouse(Model& model, Model& model2, Model& wood, Shader& shader)
 
 	_model = glm::mat4(1.0f);
 
-	_model = glm::translate(_model, glm::vec3(-200.0, 0.1f, -450.0f));
+	_model = glm::translate(_model, glm::vec3(+100.0, 2.1f, -450.0f));
 	//_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	_model = glm::scale(_model, glm::vec3(0.1f));
+	_model = glm::scale(_model, glm::vec3(1.5f));
 
-	view = camera.GetViewMatrix();
+	 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
 	// draw scene as normal
 	shader.use();
 	shader.setMat4("model", _model);
@@ -765,9 +790,9 @@ void drawHouse(Model& model, Model& model2, Model& wood, Shader& shader)
 
 	_model = glm::mat4(1.0f);
 
-	_model = glm::translate(_model, glm::vec3(-200.0 + 30.0, 0.1f, -450.0 - 20.0f));
+	_model = glm::translate(_model, glm::vec3(-200.0+30.0, 0.1f, -450.0-20.0f));
 	//_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	_model = glm::scale(_model, glm::vec3(5.0f));
+	_model = glm::scale(_model, glm::vec3(10.0f));
 
 	view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -781,14 +806,14 @@ void drawHouse(Model& model, Model& model2, Model& wood, Shader& shader)
 
 	wood.Draw(shader);
 
-	for (int i = 0; i < 100; ++i)
+	for (int i = 0; i < 50; ++i)
 	{
 		_model = glm::translate(_model, glm::vec3(+30.0, 0.0f, -15.0f));
 
-		if (i >= 30)
-			_model = glm::translate(_model, glm::vec3(+30.0, 0.0f, +15.0f));
+		if(i>=30)
+		_model = glm::translate(_model, glm::vec3(+30.0, 0.0f, +15.0f));
 
-		_model = glm::rotate(_model, glm::radians(50.0f), glm::vec3(.0, 1.0f, 0.0f));
+		_model = glm::rotate(_model, glm::radians(50.0f),glm::vec3(.0, 1.0f, 0.0f));
 
 		// draw scene as normal
 		shader.use();
@@ -805,15 +830,15 @@ void drawHouse(Model& model, Model& model2, Model& wood, Shader& shader)
 
 
 
-void drawCone(Model& model, Shader& shader)
+void drawCone(Model& model,Shader& shader)
 {
 	glm::mat4 _model = glm::mat4(1.0f);
 	//_model = glm::translate(_model, glm::vec3(0.0f,0.1f,0.0f));
 
 
-	_model = glm::translate(_model, glm::vec3(-320.0 - 50.0, 0.1f, -340.0 - 20.0f));
+	_model = glm::translate(_model, glm::vec3(-320.0-50.0, 2.1f, -340.0-20.0f));
 	//_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	_model = glm::scale(_model, glm::vec3(0.1f));
+	_model = glm::scale(_model, glm::vec3(0.3f));
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -827,10 +852,10 @@ void drawCone(Model& model, Shader& shader)
 
 	model.Draw(shader);
 
-	for (int i = 0; i < 30; ++i)
+	for (int i = 0; i < 10; ++i)
 	{
-		_model = glm::translate(_model, glm::vec3(-50.0, 0.0f, -20.0f));
-
+		_model = glm::translate(_model, glm::vec3(- 50.0, 2.0f,+ 20.0f));
+				
 		// draw scene as normal
 		shader.use();
 		shader.setMat4("model", _model);
@@ -849,15 +874,15 @@ void drawCone(Model& model, Shader& shader)
 }
 
 
-void drawPlane(Model& model, Model& model2, Shader& shader)
+void drawPlane(Model& model,Model& model2, Shader& shader)
 {
 	glm::mat4 _model = glm::mat4(1.0f);
 	//_model = glm::translate(_model, glm::vec3(0.0f,0.1f,0.0f));
 
 
-	_model = glm::translate(_model, glm::vec3(-320.0 - 50.0, 0.0f, -20.0f));
+	_model = glm::translate(_model, glm::vec3(-320.0 - 50.0, 2.0f, -20.0f));
 	_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	_model = glm::scale(_model, glm::vec3(1.0f));
+	_model = glm::scale(_model, glm::vec3(5.0f));
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
@@ -874,11 +899,11 @@ void drawPlane(Model& model, Model& model2, Shader& shader)
 
 
 	_model = glm::mat4(1.0f);
-	_model = glm::translate(_model, glm::vec3(+320.0 - 50.0, 0.0f, -20.0f));
+	_model = glm::translate(_model, glm::vec3(+320.0 - 50.0, 2.0f, -20.0f));
 	_model = glm::rotate(_model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-	_model = glm::scale(_model, glm::vec3(1.0f));
+	_model = glm::scale(_model, glm::vec3(5.0f));
 
-
+	
 	shader.use();
 	shader.setMat4("model", _model);
 	shader.setMat4("view", view);
@@ -888,3 +913,6 @@ void drawPlane(Model& model, Model& model2, Shader& shader)
 	model2.Draw(shader);
 
 }
+
+
+
