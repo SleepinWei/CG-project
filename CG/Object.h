@@ -26,6 +26,10 @@ public:
 
 	//setIdentity() 
 	//setOrigin() 
+	PhysicsModel(btDiscreteDynamicsWorld* world)
+	{
+		dynamicsWorld = world;
+	}
 	void setMass(btScalar mass) {
 		mass = mass;
 	}
@@ -59,7 +63,7 @@ public:
 	Object(Mesh mesh_from_object, btDiscreteDynamicsWorld* dynamicsWorld)
 	{
 		mesh = new Mesh(mesh_from_object);
-		physicsModel = new PhysicsModel;
+//		physicsModel = new PhysicsModel;
 		physicsModel->dynamicsWorld = dynamicsWorld;
 
 		id = idCounter++;

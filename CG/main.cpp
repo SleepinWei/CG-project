@@ -16,11 +16,13 @@
 //#include"stb_image.h"
 #include"Manager.h"
 #include"Terrain.h"
+
+#include"Physics.h"
+#include"Vehicle.h"
 //imgui 
 #include"../include/imgui/imgui_impl_glfw.h"
 #include"../include/imgui/imgui.h"
 #include"../include/imgui/imgui_impl_opengl3.h"
-#include"Grass.h"
 
 #include"Utils.h"
 
@@ -47,6 +49,9 @@ void physics() {
 	PhysicsManager* phyManager = new PhysicsManager();
 	Terrain* terrain = new Terrain("height_map.png");
 	phyManager->collisionShapes.push_back(terrain->heightFieldShape);
+	for (int i = 0; i < 150; i++) {
+		phyManager->debugDraw(true);
+	}
 }
 void renders() {
 	glfwInit();
@@ -71,19 +76,18 @@ void renders() {
 	Shader shadowShader("../shader/parallel_light/shadow_mapping_depth.vs", "../shader/parallel_light/shadow_mapping_depth.fs");
 	Shader shader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
 	Shader lightShader("../shader/light.vs", "../shader/light.fs");
-	
+
 	//Model model("../resources/objects/Avent_sport/Avent_sport.obj");
 
 	//SkyBox* skybox = new SkyBox();
 	DynamicSky* sky = new DynamicSky();
 	Shadow* shadow = new Shadow();
 	Plane* plane = new Plane();
-	Grass* grass = new Grass();
 	glm::vec3 lightPosition = glm::vec3(0.f, 20.f, -20.f);
 	glm::vec3 lightColor = glm::vec3(1.0f, 1.0f, 1.0f);
 
 	//Model car("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
-	//Model car("../resources/objects/Avent_sport/Avent_sport.obj");
+	Model car("../resources/objects/Avent_sport/Avent_sport.obj");
 	//std::cout << car.length << std::endl;
 	//std::cout << car.width << std::endl;
 	//std::cout << car.height << std::endl;
@@ -98,6 +102,12 @@ void renders() {
 	shader.use();
 	shader.setInt("diffuseTexture", 0);
 	shader.setInt("shadowMap", 1);
+
+	Physics physicsWorld;
+	physicsWorld.ground();
+	Vehicle vehicle(physicsWorld.dynamicsWorld);
+	vehicle.InitVehicle();
+
 #endif
 	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window))
@@ -130,7 +140,9 @@ void renders() {
 			ImGui::SliderFloat("Yaw", &camera.Yaw, -90.0f, 90.0f);
 			ImGui::SliderFloat("Pitch", &camera.Pitch, -90.0f, 90.0f);
 			ImGui::SliderFloat("Zoom", &camera.Zoom, 0.0f, 90.0f);
-
+			ImGui::SliderFloat("Vehicle_X", &vehicle.positionX, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Vehicle_Y", &vehicle.positionY, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Vehicle_Z", &vehicle.positionZ, -1000.0f, 1000.0f);
 			ImGui::End();
 		}
 		ImGui::Render();
@@ -139,14 +151,14 @@ void renders() {
 #ifdef TEST_OBJ
 
 		//1. render shadows 
-		
+
 		glm::mat4 lightProjection, lightView;
 		glm::mat4 lightSpaceMatrix;
 		float near_plane = 1.0f;
 		float far_plane = 50.f;
 
 		lightProjection = glm::ortho(-10.f, 10.f, -10.f, 10.f, near_plane, far_plane);
-		float fovy = glm::radians(90.f);                                                                                                                              
+		float fovy = glm::radians(90.f);
 		float aspect = (float)shadow->shadowWidth / (float)shadow->shadowHeight;
 		//lightProjection = glm::perspective(fovy, aspect, near_plane, far_plane);
 		lightView = glm::lookAt(lightPosition, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
@@ -166,7 +178,6 @@ void renders() {
 		glBindVertexArray(plane->VAO);
 		shadowShader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		//car.Draw(shadowShader);
 
 		model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 		model = glm::translate(model, glm::vec3(1.0f));
@@ -201,9 +212,12 @@ void renders() {
 		shader.setMat4("model", glm::mat4(1.0f));
 		glBindVertexArray(plane->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		shader.setMat4("model", model);
-		//car.Draw(shader);
-		renderCube();
+
+
+
+		shader.setMat4("model", vehicle.getTransform());
+		car.Draw(shader);
+		//renderCube();
 
 		lightShader.use();
 		glm::mat4 lightModel = glm::mat4(1.0f);
@@ -214,9 +228,6 @@ void renders() {
 		lightShader.setMat4("model", lightModel);
 		renderCube();
 
-		//grass->update(deltaTime);
-		//grass->render();
-
 		sky->renderSky(camera);
 		glBindVertexArray(0);
 #endif
@@ -224,6 +235,9 @@ void renders() {
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
+		vehicle.getKeyboard(window, deltaTime);
+		vehicle.updateTransform(deltaTime);
+		physicsWorld.dynamicsWorld->stepSimulation(deltaTime);
 	}
 }
 
