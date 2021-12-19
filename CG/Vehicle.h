@@ -71,9 +71,24 @@ public:
 	}
 	void Steering(double deltatime)
 	{
-		btScalar steering_new = RaycastModel->getSteeringValue(0) + 0.4 * deltatime;
-		if (fabs(deltatime) < 1e-6)
-			steering_new = 0;
+		btScalar steer_cur = RaycastModel->getSteeringValue(0);
+		btVector3 orient = chassis->getLinearVelocity();
+		//std::cout << -orient.getX() << " " << orient.getZ() << std::endl;
+		if (orient.getX() > 1 && orient.getZ() > 1)
+		{
+			steer_cur = atan(orient.getZ() / (-orient.getX()));
+			if (-orient.getX() < -1 && orient.getZ() > 1)
+				steer_cur += 3.14;
+			else if (-orient.getX() < -1e-1 && orient.getZ() < -1e-1)
+				steer_cur -= 3.14;
+			if (fabs(RaycastModel->getSteeringValue(0) - steer_cur) > 0.5)	//ÔÚµ¹³µ
+				steer_cur = RaycastModel->getSteeringValue(0);
+		}
+		btScalar steering_new = steer_cur + 0.4 * deltatime;
+		if (steering_new > 3.14)
+			steering_new -= 6.28;
+		else if (steering_new < -3.14)
+			steering_new += 6.28;
 		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
 			RaycastModel->setSteeringValue(steering_new, i);
 	}
@@ -106,8 +121,7 @@ public:
 	glm::mat4 getTransform()
 	{
 		chassis->getMotionState()->getWorldTransform(modelTransform);
-		//btVector3 orient= chassis->getLinearVelocity();
-		//btQuaternion steering(btVector3(0, 1, 0), atan(orient.getZ()/ orient.getX()));
+
 		btQuaternion steering(btVector3(0, 1, 0), RaycastModel->getSteeringValue(0));
 		btTransform trans(steering, btVector3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY(), modelTransform.getOrigin().getZ()));
 		//modelTransform = RaycastModel->getChassisWorldTransform();
