@@ -10,6 +10,7 @@ private:
 	btCollisionDispatcher* dispatcher;
 	btBroadphaseInterface* overlappingPairCache;
 	btSequentialImpulseConstraintSolver* solver;
+	btAlignedObjectArray<btCollisionShape*> collisionShapes;
 public:
 	btDiscreteDynamicsWorld* dynamicsWorld;
 	Physics()
@@ -47,6 +48,34 @@ public:
 		btRigidBody* body = new btRigidBody(rbInfo);
 
 		//add the body to the dynamics world
+		dynamicsWorld->addRigidBody(body);
+	}
+	void setCube(float x, float y)
+	{
+		// btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
+		btCollisionShape* colShape = new btSphereShape(btScalar(1.));
+		
+		collisionShapes.push_back(colShape);
+
+		/// 创建动态对象
+		btTransform startTransform;
+		startTransform.setIdentity();
+
+		btScalar mass(10.f);
+
+		// 刚体是动态的如果且仅当质量为非零时，否则是静止的
+		bool isDynamic = (mass != 0.f);
+
+		btVector3 localInertia(0, 0, 0);
+		if (isDynamic)
+			colShape->calculateLocalInertia(mass, localInertia);
+
+		startTransform.setOrigin(btVector3(x, 10, y));
+
+		// 推荐使用motionstate，它提供插值功能，只同步“活动”对象
+		btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
+		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
+		btRigidBody* body = new btRigidBody(rbInfo);
 		dynamicsWorld->addRigidBody(body);
 	}
 };

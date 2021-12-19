@@ -17,5 +17,5 @@ F:\coding\Github Desktop\CG-project\CG\Utils.h(198,13): warning C4244: “=”: 
 F:\coding\Github Desktop\CG-project\CG\Utils.h(207,31): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
 F:\coding\Github Desktop\CG-project\CG\Manager.h(106,1): warning C4305: “参数”: 从“double”到“const btScalar”截断
 F:\coding\Github Desktop\CG-project\CG\Terrain.h(69,13): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-F:\coding\Github Desktop\CG-project\CG\main.cpp(117,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\main.cpp(120,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
   CG.vcxproj -> F:\coding\Github Desktop\CG-project\x64\Debug\Project.exe
