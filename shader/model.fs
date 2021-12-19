@@ -84,7 +84,7 @@ float ShadowCalculation(vec4 fragPosLightSpace,float bias)
 
 void main()
 {           
-    vec3 color = vec3(0.2, 0.2, 0.2);
+    vec3 color = vec3(0.7, 0.7, 0.7);
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightColor = vec3(0.5);
     // ambient
@@ -97,13 +97,13 @@ void main()
     vec3 viewDir = normalize(viewPos - fs_in.FragPos);
     float spec = 0.2;
     vec3 halfwayDir = normalize(lightDir + viewDir);  
-    spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
+    spec = pow(max(dot(normal, halfwayDir), 0.0), 100.0);
     vec3 specular = spec * lightColor;    
     // calculate shadow
     float bias = max(0.05*(1.0-dot(normal,lightDir)),0.005);
     // float shadow = ShadowCalculation(fs_in.FragPosLightSpace,bias);   
-    float shadow = ShadowCalculation(fs_in.FragPosLightSpace,bias);   
-
+    // float shadow = ShadowCalculation(fs_in.FragPosLightSpace,bias);   
+    float shadow= 0.0;
     vec3 lighting = (ambient + (1.0 - shadow) * (diffuse + specular)) * color;    
     
     FragColor = vec4(lighting, 1.0);

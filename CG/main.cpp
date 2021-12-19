@@ -91,6 +91,7 @@ void renders() {
 	//Model car("../resources/objects/Mercedes_Benz/Mercedes_Benz.obj");
 	Model car("../resources/objects/Avent_sport/Avent_sport.obj");
 	Model raceTrackModel(("../resources/sceneResources/race-track/FullTrack.obj"));
+	GLuint woodTexture = loadTexture("../resources/textures/wood.png");
 	//std::cout << car.length << std::endl;
 	//std::cout << car.width << std::endl;
 	//std::cout << car.height << std::endl;
@@ -195,6 +196,11 @@ void renders() {
 		//glm::mat4 model = glm::mat4(1.0f);
 		shadowShader.setMat4("model", vehicle.getTransform());
 		car.Draw(shadowShader);
+
+		model = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f));
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -4.4f, 0.0f)) * model;
+		modelShader.setMat4("model", model);
+		raceTrackModel.Draw(shadowShader);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
@@ -224,15 +230,13 @@ void renders() {
 		shader.setMat4("model", glm::mat4(1.0f));
 		glBindVertexArray(plane->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
-		model = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f));
-		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -4.4f, 0.0f)) * model;
-		shader.setMat4("model", model);
-		raceTrackModel.Draw(shader);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		
+		/*draw car & road*/
 		modelShader.use();
 		modelShader.setMat4("projection", projection);
 		modelShader.setMat4("view", view);
-		modelShader.setMat4("model", vehicle.getTransform());
 		modelShader.setVec3("viewPos", camera.Position);
 		modelShader.setVec3("lightPos", lightPosition);
 		modelShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
@@ -243,7 +247,12 @@ void renders() {
 		//shader.setMat4("projection", projection);
 		//shader.setMat4("view", view);
 		//shader.setMat4("model", vehicle.getTransform() * glm::scale(glm::vec3(0.2f)));
+		model = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f));
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -4.4f, 0.0f)) * model;
+		modelShader.setMat4("model", model);
+		raceTrackModel.Draw(modelShader);
 
+		modelShader.setMat4("model", vehicle.getTransform());
 		car.Draw(modelShader);
 
 		model = glm::mat4(1.0f);
@@ -259,9 +268,18 @@ void renders() {
 		mov.y = trans.getOrigin().getY();
 		mov.z = trans.getOrigin().getZ();
 		model = glm::translate(glm::mat4(1.0f), mov) * model;
-		modelShader.setMat4("model", model);
+		//modelShader.setMat4("model", model);
+		shader.use();
+		shader.setMat4("model", model);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, woodTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, shadow->depthMap);
 		renderCube();
+		glBindTexture(GL_TEXTURE_2D, 0);
 
+		//modelShader.use();		
+		/*draw box*/
 		model = glm::mat4(1.0f);
 		obj = physicsWorld.dynamicsWorld->getCollisionObjectArray()[2];
 		body = btRigidBody::upcast(obj);
@@ -273,8 +291,15 @@ void renders() {
 		mov.y = trans.getOrigin().getY();
 		mov.z = trans.getOrigin().getZ();
 		model = glm::translate(glm::mat4(1.0f), mov) * model;
-		modelShader.setMat4("model", model);
+		//modelShader.setMat4("model", model);
+		shader.use();
+		shader.setMat4("model", model);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, woodTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, shadow->depthMap);
 		renderCube();
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		//lightShader.use();
 		//glm::mat4 lightModel = glm::mat4(1.0f);
