@@ -108,6 +108,8 @@ void renders() {
 
 	Physics physicsWorld;
 	physicsWorld.ground();
+	physicsWorld.setCube(-20, 10);
+	physicsWorld.setCube(-20, -10);
 	Vehicle vehicle(physicsWorld.dynamicsWorld);
 	vehicle.InitVehicle();
 
@@ -243,7 +245,36 @@ void renders() {
 		//shader.setMat4("model", vehicle.getTransform() * glm::scale(glm::vec3(0.2f)));
 
 		car.Draw(modelShader);
-		//renderCube();
+
+		model = glm::mat4(1.0f);
+		btCollisionObject* obj = physicsWorld.dynamicsWorld->getCollisionObjectArray()[1];
+		btRigidBody* body = btRigidBody::upcast(obj);
+		btTransform trans;
+		if (body && body->getMotionState())
+			body->getMotionState()->getWorldTransform(trans);
+		else
+			trans = obj->getWorldTransform();
+		glm::vec3 mov;
+		mov.x = trans.getOrigin().getX();
+		mov.y = trans.getOrigin().getY();
+		mov.z = trans.getOrigin().getZ();
+		model = glm::translate(glm::mat4(1.0f), mov) * model;
+		modelShader.setMat4("model", model);
+		renderCube();
+
+		model = glm::mat4(1.0f);
+		obj = physicsWorld.dynamicsWorld->getCollisionObjectArray()[2];
+		body = btRigidBody::upcast(obj);
+		if (body && body->getMotionState())
+			body->getMotionState()->getWorldTransform(trans);
+		else
+			trans = obj->getWorldTransform();
+		mov.x = trans.getOrigin().getX();
+		mov.y = trans.getOrigin().getY();
+		mov.z = trans.getOrigin().getZ();
+		model = glm::translate(glm::mat4(1.0f), mov) * model;
+		modelShader.setMat4("model", model);
+		renderCube();
 
 		//lightShader.use();
 		//glm::mat4 lightModel = glm::mat4(1.0f);

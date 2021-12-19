@@ -132,11 +132,15 @@ public:
 		glm::mat4 worldTransform = translation * rotation;
 		return worldTransform;
 	}
+	glm::vec3 getPos()
+	{
+		return glm::vec3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY() - 0.5, modelTransform.getOrigin().getZ());
+	}
 	glm::vec3 getFront()
 	{
 		btQuaternion steering(btVector3(0, 1, 0), RaycastModel->getSteeringValue(0));
 		btTransform trans(steering, btVector3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY(), modelTransform.getOrigin().getZ()));
-		return glm::vec3(trans.getRotation().getX(), trans.getRotation().getY(), trans.getRotation().getZ());
+		return glm::vec3(trans.getRotation().getW(), trans.getRotation().getX(), trans.getRotation().getY());
 	}
 };
 
