@@ -76,7 +76,8 @@ void renders() {
 	Shader shadowShader("../shader/parallel_light/shadow_mapping_depth.vs", "../shader/parallel_light/shadow_mapping_depth.fs");
 	Shader shader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
 	Shader lightShader("../shader/light.vs", "../shader/light.fs");
-	Shader modelShader("../shader/model.vs", "../shader/model.fs");
+	//Shader modelShader("../shader/model.vs", "../shader/model.fs");
+	Shader modelShader("../shader/parallel_light/pcss.vs", "../shader/parallel_light/pcss.fs");
 
 	//Model model("../resources/objects/Avent_sport/Avent_sport.obj");
 
@@ -185,12 +186,15 @@ void renders() {
 		shadowShader.setMat4("model", model);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
+		/*model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
 		model = glm::translate(model, glm::vec3(1.0f));
 		shadowShader.setMat4("model", model);
-		renderCube();
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		renderCube();*/
 		//glm::mat4 model = glm::mat4(1.0f);
+		shadowShader.setMat4("model", vehicle.getTransform());
+		car.Draw(shadowShader);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 
 		//2. draw plane 
 		glCullFace(GL_BACK);
@@ -231,14 +235,14 @@ void renders() {
 		car.Draw(modelShader);
 		//renderCube();
 
-		lightShader.use();
-		glm::mat4 lightModel = glm::mat4(1.0f);
-		lightModel = glm::scale(model, glm::vec3(0.1f));
-		lightModel = glm::translate(model, lightPosition);
-		lightShader.setMat4("projection", projection);
-		lightShader.setMat4("view", view);
-		lightShader.setMat4("model", lightModel);
-		renderCube();
+		//lightShader.use();
+		//glm::mat4 lightModel = glm::mat4(1.0f);
+		//lightModel = glm::scale(model, glm::vec3(0.1f));
+		//lightModel = glm::translate(model, lightPosition);
+		//lightShader.setMat4("projection", projection);
+		//lightShader.setMat4("view", view);
+		//lightShader.setMat4("model", lightModel);
+		//renderCube();
 
 		sky->renderSky(camera,time);
 		glBindVertexArray(0);
