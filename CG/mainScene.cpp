@@ -165,12 +165,12 @@ int main()
 	// -------------
 	vector<std::string> faces
 	{
-		FileSystem::getPath("../resources/textures/skybox/right.jpg"),
-		FileSystem::getPath("../resources/textures/skybox/left.jpg"),
-		FileSystem::getPath("../resources/textures/skybox/top.jpg"),
-		FileSystem::getPath("../resources/textures/skybox/bottom.jpg"),
-		FileSystem::getPath("../resources/textures/skybox/front.jpg"),
-		FileSystem::getPath("../resources/textures/skybox/back.jpg"),
+		("../resources/textures/skybox/right.jpg"),
+		("../resources/textures/skybox/left.jpg"),
+		("../resources/textures/skybox/top.jpg"),
+		("../resources/textures/skybox/bottom.jpg"),
+		("../resources/textures/skybox/front.jpg"),
+		("../resources/textures/skybox/back.jpg"),
 	};
 	unsigned int cubemapTexture = loadCubemap(faces);
 
@@ -285,7 +285,7 @@ int main()
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+		glm::mat4  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		// draw scene as normal
 
 		view = glm::mat4(glm::mat3(camera.GetViewMatrix())); // remove translation from the view matrix
@@ -456,7 +456,7 @@ void drawCar(Model& model, Shader& shader)
 	
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	glm::mat4  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	
 	shader.use();
 
@@ -481,7 +481,7 @@ void drawRaceTrack(Model& model, Shader& shader)
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	glm::mat4  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 	shader.use();
 	shader.setMat4("model", _model);
@@ -505,7 +505,7 @@ void drawStreetLights1(Model& model, Shader& shader, unsigned int diffuseMapStre
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 
 
@@ -537,7 +537,7 @@ void drawStreetLights1(Model& model, Shader& shader, unsigned int diffuseMapStre
 
 	view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-    projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+     projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 
 	shader.use();
@@ -587,7 +587,7 @@ void drawStreetLights2(Model& model, Shader& shader)
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	glm::mat4  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 	shader.use();
 	shader.setMat4("model", _model);
@@ -611,7 +611,7 @@ void drawStopSign1(Model& model, Shader& shader)
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	glm::mat4  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 	shader.use();
 	shader.setMat4("model", _model);
@@ -639,7 +639,7 @@ void drawTrafficSign(Model& model, Shader& shader)
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	glm::mat4  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 	shader.use();
 	shader.setMat4("model", _model);
@@ -697,7 +697,7 @@ void drawLimitSign(Model& model, Shader& shader,unsigned int diffuseMapLimitSign
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	glm::mat4  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 	shader.use();
 	glActiveTexture(GL_TEXTURE12);
@@ -757,7 +757,7 @@ void drawHouse(Model& model,Model& model2,Model& wood, Shader& shader)
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	glm::mat4  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 	shader.use();
 	shader.setMat4("model", _model);
@@ -776,7 +776,7 @@ void drawHouse(Model& model,Model& model2,Model& wood, Shader& shader)
 
 	 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 	shader.use();
 	shader.setMat4("model", _model);
@@ -796,7 +796,7 @@ void drawHouse(Model& model,Model& model2,Model& wood, Shader& shader)
 
 	view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 	shader.use();
 	shader.setMat4("model", _model);
@@ -842,7 +842,7 @@ void drawCone(Model& model,Shader& shader)
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	glm::mat4  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 	shader.use();
 	shader.setMat4("model", _model);
@@ -886,7 +886,7 @@ void drawPlane(Model& model,Model& model2, Shader& shader)
 
 	glm::mat4 view = camera.GetViewMatrix();
 	//glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-	glm::mat4 projection = camera.GetProjMatrix((float)SCR_WIDTH / (float)SCR_HEIGHT);
+	glm::mat4  projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 	// draw scene as normal
 	shader.use();
 	shader.setMat4("model", _model);

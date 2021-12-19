@@ -122,5 +122,8 @@
     <ClInclude Include="Physics.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="ComplexShader.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
