@@ -5,7 +5,7 @@
 *.slo
 *.lo
 *.o
-#*.obj
+# *.obj
 
 # Precompiled Headers
 *.gch
@@ -34,5 +34,4 @@
 .vs/
 tempfile/
 *.cfg
-x64/
 #resources/objects/

@@ -1,9 +1,8 @@
 #version 450
 
-layout(set = 0, binding = 0) uniform CameraBufferObject {
-    mat4 view;
-    mat4 proj;
-} camera;
+uniform mat4 view;
+uniform mat4 proj;
+
 
 in TESE_OUT
 {

@@ -253,14 +253,14 @@ public:
         glDeleteVertexArrays(1, &VAO2);
     }
 
-    void renderSky(Camera& camera){
+    void renderSky(Camera& camera,float time){
 
         glDepthFunc(GL_LEQUAL); 
         glBindFramebuffer(GL_FRAMEBUFFER, FBO);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         float rate = 20.f;
-        float time = (float)glfwGetTime() * rate - 0.0f;
+        //float time = (float)glfwGetTime() * rate - 0.0f;
 
         const float near = 1.0f;
         const float far = 1000.f;
