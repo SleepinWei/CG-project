@@ -128,15 +128,15 @@ public:
 	}
 	void pushVertice(int x, int y)
 	{
-		vertices.push_back((x - radix / 2));
-		vertices.push_back(heightFieldData[x * 52 + y]);
-		vertices.push_back((y - radix / 2));
+		vertices.push_back(x - radix / 2 + 10);
+		vertices.push_back(heightFieldData[x * 52 + y] - (maxHeight + minHeight) / 2);
+		vertices.push_back(y - radix / 2 + 60);
 		auto normal = normals[50 * (x - 1) + y - 1];
 		vertices.push_back(normal.x);
 		vertices.push_back(normal.y);
 		vertices.push_back(normal.z);
-		vertices.push_back(0);
-		vertices.push_back(0);
+		vertices.push_back(0.0f);
+		vertices.push_back(0.0f);
 		//ÀÊ±„ÃÓ2ŒªŒ∆¿Ì
 	}
 

@@ -25,10 +25,10 @@ public:
 	{
 		collisionShape = new btBoxShape(btVector3(1.0f, 0.5f, 2.0f));
 
-		btQuaternion rotation = btQuaternion(btVector3(0, 1, 0), btScalar(2* pi));
+		btQuaternion rotation = btQuaternion(btVector3(0, 1, 0), btScalar(2 * pi));
 		btTransform vehicleTransform(rotation, btVector3(0, 1, 0));
 		motionState = new btDefaultMotionState(vehicleTransform);
-		btScalar mass = 10.0;
+		btScalar mass = 20.0;
 		btVector3 inertia(0, 0, 0);
 		collisionShape->calculateLocalInertia(mass, inertia);
 		btRigidBody::btRigidBodyConstructionInfo chassisRigidBodyCI(mass, motionState, collisionShape, inertia);
@@ -52,14 +52,14 @@ public:
 		RaycastModel = new btRaycastVehicle(tuning, chassis, Raycaster);
 		RaycastModel->setCoordinateSystem(2, 1, 0);	//×ø±êË³Ðò
 		btScalar wheelHeight = 0.4f;
-		btVector3 connectionPointCS[4] = { btVector3(-1.5f, wheelHeight, 0.8f),btVector3(-1.5f, wheelHeight, -0.8f), btVector3(1.5f, wheelHeight,0.8f), btVector3(1.5f, wheelHeight, -0.8f) };	//ÂÖÌ¥Î»ÖÃ
-		for (int i = 0; i < 2; i++)
+		btVector3 connectionPointCS[4] = { btVector3(0.8f, wheelHeight, -1.5f),btVector3(-0.8f, wheelHeight, -1.5f), btVector3(0.8f, wheelHeight,1.5f), btVector3(-0.8f, wheelHeight, 1.5f) };	//ÂÖÌ¥Î»ÖÃ
+		for (int i = 0; i < 4; i++)
 		{
 			btVector3 wheelDirectionCS0 = btVector3(0.0f, -1.0f, 0.0f);	//ÂÖÌ¥·½Ïò
 			btVector3 wheelAxleCS = btVector3(0.0f, 0.0f, -1.0f);	//ÂÖÌ¥Öá
 			btScalar suspensionRestLength = 0.6f;	//Ðü¼Ü³¤¶È
 			btScalar wheelRadius = 0.4f;	//ÂÖÌ¥°ë¾¶
-			bool front = true;
+			bool front = (i < 2) ? true:false;
 			RaycastModel->addWheel(connectionPointCS[i], wheelDirectionCS0, wheelAxleCS, suspensionRestLength, wheelRadius, tuning, front);
 		}
 		engine_force = 0;
@@ -77,10 +77,10 @@ public:
 		btScalar steering_new = steer_cur + 0.4 * deltatime;
 		if (fabs(deltatime) < 1e-6)
 			steering_new = 0;
-		if (steering_new > 3.0)
-			steering_new = 3.0;
-		else if (steering_new < -3.0)
-			steering_new = -3.0;
+		//if (steering_new > 3.0)
+		//	steering_new = 3.0;
+		//else if (steering_new < -3.0)
+		//	steering_new = -3.0;
 		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
 			RaycastModel->setSteeringValue(steering_new, i);
 	}

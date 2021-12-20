@@ -41,3 +41,5 @@ tempfile/
 *.pdb
 *.ilk
 *.recipe
+CG/x64/Debug/CG.log
+CG/x64/Debug/CG.log

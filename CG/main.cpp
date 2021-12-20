@@ -103,17 +103,17 @@ void renders() {
 	shader.setInt("shadowMap", 1);
 
 	physicsWorld->ground();
-	/*
+	terrain->prepareTerrain();
 	physicsWorld->phyManager->collisionShapes.push_back(terrain->heightFieldShape);
 	btTransform field_trans;
 	field_trans.setIdentity();
+	field_trans.setOrigin(btVector3(5, 0, 50));
 	auto motionState = new btDefaultMotionState(field_trans);
 	btScalar mass = 0.0;
 	btVector3 inertia(0, 0, 0);
 	btRigidBody::btRigidBodyConstructionInfo fieldRigidBodyCI(mass, motionState, terrain->heightFieldShape, inertia);
 	auto field_body = new btRigidBody(fieldRigidBodyCI);
 	physicsWorld->phyManager->dynamicsWorld->addRigidBody(field_body);
-	*/
 	physicsWorld->setCube(-20, 10, 10);
 	physicsWorld->setCube(-20, -10, 0);
 	Vehicle vehicle(physicsWorld->phyManager->dynamicsWorld);
@@ -210,7 +210,6 @@ void renders() {
 
 
 		//2. draw plane 
-		/*
 		glCullFace(GL_BACK);
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -218,28 +217,10 @@ void renders() {
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 
-		shader.use();
-		shader.setMat4("model", glm::mat4(1.0f));
-		shader.setMat4("projection", projection);
-		shader.setMat4("view", view);
-		shader.setVec3("viewPos", camera.Position);
-		shader.setVec3("lightPos", lightPosition);
-		shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-		shader.setMat4("lightView", lightView);
-		shader.setFloat("zNear", 1.0f);
-		shader.setVec2("planeSize", glm::vec2(20.f, 20.f));
-		shader.setVec2("lightSize", glm::vec2(5.f, 5.f));
-		glBindVertexArray(terrain->terrainVAO);
-		glEnableVertexAttribArray(0);
-		glDrawArrays(GL_TRIANGLES, 0, terrain->vertices.size() / 8);
-
-		*/
 		glCullFace(GL_BACK);
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		glm::mat4 view = camera.GetViewMatrix();
 		shader.use();
 		//shader.setMat4("model", model);
 		shader.setMat4("projection", projection);
@@ -251,17 +232,21 @@ void renders() {
 		shader.setFloat("zNear", 1.0f);
 		shader.setVec2("planeSize", glm::vec2(20.f, 20.f));
 		shader.setVec2("lightSize", glm::vec2(5.f, 5.f));
+		shader.setMat4("model", glm::mat4(1.0f));
+
+		glBindVertexArray(terrain->terrainVAO);
+		glEnableVertexAttribArray(0);
+		glDrawArrays(GL_TRIANGLES, 0, terrain->vertices.size() / 8);
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, plane->textureID);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, shadow->depthMap);
-
-		shader.setMat4("model", glm::mat4(1.0f));
 		glBindVertexArray(plane->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		
+
 		/*draw car & road*/
 		modelShader.use();
 		modelShader.setMat4("projection", projection);
