@@ -9,9 +9,9 @@ f:\coding\github desktop\cg-project\cg\x64\debug\imgui_draw.obj
 f:\coding\github desktop\cg-project\cg\x64\debug\imgui_demo.obj
 f:\coding\github desktop\cg-project\cg\x64\debug\imgui.obj
 f:\coding\github desktop\cg-project\cg\x64\debug\glad.obj
+f:\coding\github desktop\cg-project\cg\x64\debug\mainscene.obj
 d:\github\cg-project\cg\x64\debug\vc142.pdb
 d:\github\cg-project\cg\x64\debug\vc142.idb
-d:\github\cg-project\cg\x64\debug\main.obj
 d:\github\cg-project\cg\x64\debug\imgui_widgets.obj
 d:\github\cg-project\cg\x64\debug\imgui_tables.obj
 d:\github\cg-project\cg\x64\debug\imgui_impl_opengl3.obj
@@ -19,12 +19,15 @@ d:\github\cg-project\cg\x64\debug\imgui_impl_glfw.obj
 d:\github\cg-project\cg\x64\debug\imgui_draw.obj
 d:\github\cg-project\cg\x64\debug\imgui_demo.obj
 d:\github\cg-project\cg\x64\debug\imgui.obj
-d:\github\cg-project\cg\x64\debug\glad.obj
 f:\coding\github desktop\cg-project\x64\debug\project.exe
 f:\coding\github desktop\cg-project\cg\x64\debug\project.ilk
 f:\coding\github desktop\cg-project\x64\debug\project.pdb
+d:\github\cg-project\cg\x64\debug\glad.obj
+d:\github\cg-project\cg\x64\debug\main.obj
+d:\github\cg-project\cg\x64\debug\mainscene.obj
+d:\github\cg-project\cg\x64\debug\project.ilk
 d:\github\cg-project\x64\debug\project.pdb
-d:\github\cg-project\x64\debug\project.ilk
+d:\github\cg-project\x64\debug\project.exe
 d:\github\cg-project\cg\x64\debug\project.tlog\cl.command.1.tlog
 d:\github\cg-project\cg\x64\debug\project.tlog\cl.read.1.tlog
 d:\github\cg-project\cg\x64\debug\project.tlog\cl.write.1.tlog

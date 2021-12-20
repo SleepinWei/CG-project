@@ -42,17 +42,12 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+Physics* physicsWorld;
+Terrain* terrain;
+
 //plane 
 //unsigned int planeVAO;
 #endif
-void physics() {
-	PhysicsManager* phyManager = new PhysicsManager();
-	Terrain* terrain = new Terrain("height_map.png");
-	phyManager->collisionShapes.push_back(terrain->heightFieldShape);
-	for (int i = 0; i < 150; i++) {
-		phyManager->debugDraw(true);
-	}
-}
 void renders() {
 	glfwInit();
 
@@ -107,11 +102,21 @@ void renders() {
 	shader.setInt("diffuseTexture", 0);
 	shader.setInt("shadowMap", 1);
 
-	Physics physicsWorld;
-	physicsWorld.ground();
-	physicsWorld.setCube(-20, 10);
-	physicsWorld.setCube(-20, -10);
-	Vehicle vehicle(physicsWorld.dynamicsWorld);
+	physicsWorld->ground();
+	/*
+	physicsWorld->phyManager->collisionShapes.push_back(terrain->heightFieldShape);
+	btTransform field_trans;
+	field_trans.setIdentity();
+	auto motionState = new btDefaultMotionState(field_trans);
+	btScalar mass = 0.0;
+	btVector3 inertia(0, 0, 0);
+	btRigidBody::btRigidBodyConstructionInfo fieldRigidBodyCI(mass, motionState, terrain->heightFieldShape, inertia);
+	auto field_body = new btRigidBody(fieldRigidBodyCI);
+	physicsWorld->phyManager->dynamicsWorld->addRigidBody(field_body);
+	*/
+	physicsWorld->setCube(-20, 10);
+	physicsWorld->setCube(-20, -10);
+	Vehicle vehicle(physicsWorld->phyManager->dynamicsWorld);
 	vehicle.InitVehicle();
 
 #endif
@@ -205,6 +210,30 @@ void renders() {
 
 
 		//2. draw plane 
+		/*
+		glCullFace(GL_BACK);
+		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+		glm::mat4 view = camera.GetViewMatrix();
+
+		shader.use();
+		shader.setMat4("model", glm::mat4(1.0f));
+		shader.setMat4("projection", projection);
+		shader.setMat4("view", view);
+		shader.setVec3("viewPos", camera.Position);
+		shader.setVec3("lightPos", lightPosition);
+		shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+		shader.setMat4("lightView", lightView);
+		shader.setFloat("zNear", 1.0f);
+		shader.setVec2("planeSize", glm::vec2(20.f, 20.f));
+		shader.setVec2("lightSize", glm::vec2(5.f, 5.f));
+		glBindVertexArray(terrain->terrainVAO);
+		glEnableVertexAttribArray(0);
+		glDrawArrays(GL_TRIANGLES, 0, terrain->vertices.size() / 8);
+
+		*/
 		glCullFace(GL_BACK);
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -256,7 +285,7 @@ void renders() {
 		car.Draw(modelShader);
 
 		model = glm::mat4(1.0f);
-		btCollisionObject* obj = physicsWorld.dynamicsWorld->getCollisionObjectArray()[1];
+		btCollisionObject* obj = physicsWorld->phyManager->dynamicsWorld->getCollisionObjectArray()[1];
 		btRigidBody* body = btRigidBody::upcast(obj);
 		btTransform trans;
 		if (body && body->getMotionState())
@@ -281,7 +310,7 @@ void renders() {
 		//modelShader.use();		
 		/*draw box*/
 		model = glm::mat4(1.0f);
-		obj = physicsWorld.dynamicsWorld->getCollisionObjectArray()[2];
+		obj = physicsWorld->phyManager->dynamicsWorld->getCollisionObjectArray()[2];
 		body = btRigidBody::upcast(obj);
 		if (body && body->getMotionState())
 			body->getMotionState()->getWorldTransform(trans);
@@ -319,12 +348,13 @@ void renders() {
 		glfwPollEvents();
 		vehicle.getKeyboard(window, deltaTime);
 		vehicle.updateTransform(deltaTime);
-		physicsWorld.dynamicsWorld->stepSimulation(deltaTime);
+		physicsWorld->phyManager->dynamicsWorld->stepSimulation(deltaTime);
 	}
 }
 
 int main() {
-	//physics();
+	physicsWorld = new Physics;
+	terrain = new Terrain("height_map.png");
 	renders();
 }
 

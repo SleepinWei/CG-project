@@ -19,14 +19,13 @@ public:
 	btScalar positionX;
 	btScalar positionY;
 	btScalar positionZ;
-	btTransform WheelTransform[4];
 	btTransform ChassisTransform;
 
 	Vehicle(btDiscreteDynamicsWorld* world) :PhysicsModel(world)
 	{
 		collisionShape = new btBoxShape(btVector3(1.0f, 0.5f, 2.0f));
 
-		btQuaternion rotation = btQuaternion(btVector3(0, 1, 0), btScalar(6.28));
+		btQuaternion rotation = btQuaternion(btVector3(0, 1, 0), btScalar(2* pi));
 		btTransform vehicleTransform(rotation, btVector3(0, 1, 0));
 		motionState = new btDefaultMotionState(vehicleTransform);
 		btScalar mass = 10.0;
@@ -52,14 +51,15 @@ public:
 		Raycaster = new btDefaultVehicleRaycaster(dynamicsWorld);
 		RaycastModel = new btRaycastVehicle(tuning, chassis, Raycaster);
 		RaycastModel->setCoordinateSystem(2, 1, 0);	//×ø±êË³Ðò
-		btVector3 connectionPointCS[4] = { btVector3(-0.6f, 0.5f, 0.7f),btVector3(0.6f, 0.5f, 0.7f), btVector3(-0.6f, 0.5f,-0.7f), btVector3(0.6f, 0.5f, -0.7f) };	//ÂÖÌ¥Î»ÖÃ
-		for (int i = 0; i < 4; i++)
+		btScalar wheelHeight = 0.4f;
+		btVector3 connectionPointCS[4] = { btVector3(-1.5f, wheelHeight, 0.8f),btVector3(-1.5f, wheelHeight, -0.8f), btVector3(1.5f, wheelHeight,0.8f), btVector3(1.5f, wheelHeight, -0.8f) };	//ÂÖÌ¥Î»ÖÃ
+		for (int i = 0; i < 2; i++)
 		{
 			btVector3 wheelDirectionCS0 = btVector3(0.0f, -1.0f, 0.0f);	//ÂÖÌ¥·½Ïò
 			btVector3 wheelAxleCS = btVector3(0.0f, 0.0f, -1.0f);	//ÂÖÌ¥Öá
 			btScalar suspensionRestLength = 0.6f;	//Ðü¼Ü³¤¶È
 			btScalar wheelRadius = 0.4f;	//ÂÖÌ¥°ë¾¶
-			bool front = (i < 2) ? true : false;
+			bool front = true;
 			RaycastModel->addWheel(connectionPointCS[i], wheelDirectionCS0, wheelAxleCS, suspensionRestLength, wheelRadius, tuning, front);
 		}
 		engine_force = 0;
@@ -74,23 +74,13 @@ public:
 	void Steering(double deltatime)
 	{
 		btScalar steer_cur = RaycastModel->getSteeringValue(0);
-		btVector3 orient = chassis->getLinearVelocity();
-		//std::cout << -orient.getX() << " " << orient.getZ() << std::endl;
-		if (orient.getX() > 1 && orient.getZ() > 1)
-		{
-			steer_cur = atan(orient.getZ() / (-orient.getX()));
-			if (-orient.getX() < -1 && orient.getZ() > 1)
-				steer_cur += pi;
-			else if (-orient.getX() < -1e-1 && orient.getZ() < -1e-1)
-				steer_cur -= pi;
-			if (fabs(RaycastModel->getSteeringValue(0) - steer_cur) > 0.5)	//ÔÚµ¹³µ
-				steer_cur = RaycastModel->getSteeringValue(0);
-		}
 		btScalar steering_new = steer_cur + 0.4 * deltatime;
-		if (steering_new > pi)
-			steering_new -= 2 * pi;
-		else if (steering_new < -pi)
-			steering_new += 2 * pi;
+		if (fabs(deltatime) < 1e-6)
+			steering_new = 0;
+		if (steering_new > 3.0)
+			steering_new = 3.0;
+		else if (steering_new < -3.0)
+			steering_new = -3.0;
 		for (int i = 0; i < RaycastModel->getNumWheels(); i++)
 			RaycastModel->setSteeringValue(steering_new, i);
 	}
@@ -106,6 +96,8 @@ public:
 			Steering(deltaTime);
 		else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
 			Steering(-deltaTime);
+		else
+			Steering(0);
 	}
 
 
@@ -123,12 +115,9 @@ public:
 	glm::mat4 getTransform()
 	{
 		chassis->getMotionState()->getWorldTransform(modelTransform);
-
-		btQuaternion steering(btVector3(0, 1, 0), RaycastModel->getSteeringValue(0));
-		btTransform trans(steering, btVector3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY(), modelTransform.getOrigin().getZ()));
-		//modelTransform = RaycastModel->getChassisWorldTransform();
+		//std::cout << wheeltr.getRotation().getX() << " " << wheeltr.getRotation().getY() << " " << wheeltr.getRotation().getZ() << " " << wheeltr.getRotation().getW() << std::endl;
 		glm::mat4 translation = glm::translate(glm::mat4(1.0f), glm::vec3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY() - 0.5, modelTransform.getOrigin().getZ()));
-		glm::mat4 rotation = glm::mat4(glm::quat(trans.getRotation().getW(), trans.getRotation().getX(), trans.getRotation().getY(), trans.getRotation().getZ()));
+		glm::mat4 rotation = glm::toMat4(glm::quat(modelTransform.getRotation().getW(), modelTransform.getRotation().getX(), modelTransform.getRotation().getY(), modelTransform.getRotation().getZ()));
 		glm::mat4 worldTransform = translation * rotation;
 		return worldTransform;
 	}
@@ -138,9 +127,7 @@ public:
 	}
 	glm::vec3 getFront()
 	{
-		btQuaternion steering(btVector3(0, 1, 0), RaycastModel->getSteeringValue(0));
-		btTransform trans(steering, btVector3(modelTransform.getOrigin().getX(), modelTransform.getOrigin().getY(), modelTransform.getOrigin().getZ()));
-		return glm::vec3(trans.getRotation().getW(), trans.getRotation().getX(), trans.getRotation().getY());
+		return glm::vec3(RaycastModel->getForwardVector().getX(), RaycastModel->getForwardVector().getY(), RaycastModel->getForwardVector().getZ());
 	}
 };
 
