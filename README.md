@@ -1,7 +1,9 @@
 # CG-project 
 This repo is our course project of Computer Graphics   
 As team members love racing games, we reach agreement on this topic.   
-This project is based on opengl4.x with glfw and glad. 
+This project is based on opengl4.x with glfw and glad.   
+✨ finished on Dec. 20   
+
 ## Group Members 
 Special thanks to my dear teammates! 
 +  zyw [@SleepinWei](https://github.com/SleepinWei) 
@@ -12,8 +14,16 @@ Special thanks to my dear teammates!
 +  fx [@outlier-21](https://github.com/outlier-21) 
 ## Structure 
 +  shader 
-    +  shadow_mapping
-    +  pcss
+    +  **atmosphere**
+    +  **grass**
+    +  **normal_mapping**
+    +  **parrallel_light** 
+    +  **point_light** 
+    +  **sky**
+    +  other shaders  
++  resources (textures & objects & heightmaps) 
++  CG
+    +  all kinds of .h & .cpp files
 ## Plans / Progress 
 - [ ] Terrain 
     - [ ] lod system 
