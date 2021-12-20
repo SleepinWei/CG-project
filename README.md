@@ -4,12 +4,12 @@ As team members love racing games, we reach agreement on this topic.
 This project is based on opengl4.x with glfw and glad. 
 ## Group Members 
 Special thanks to my dear teammates! 
-+  zyw @SleepinWei 
-+  ppz @
-+  cjy @ 
++  zyw [@SleepinWei](https://github.com/SleepinWei) 
++  ppz [@jinxes61](https://github.com/jinxes61)
++  cjy [@bakacheng](https://github.com/bakacheng) 
 +  wpy @ 
-+  yhw @ 
-+  fx @ 
++  yht @ 
++  fx [@outlier-21](https://github.com/outlier-21) 
 ## Structure 
 +  shader 
     +  shadow_mapping
