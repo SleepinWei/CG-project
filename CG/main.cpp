@@ -114,8 +114,8 @@ void renders() {
 	auto field_body = new btRigidBody(fieldRigidBodyCI);
 	physicsWorld->phyManager->dynamicsWorld->addRigidBody(field_body);
 	*/
-	physicsWorld->setCube(-20, 10);
-	physicsWorld->setCube(-20, -10);
+	physicsWorld->setCube(-20, 10, 10);
+	physicsWorld->setCube(-20, -10, 0);
 	Vehicle vehicle(physicsWorld->phyManager->dynamicsWorld);
 	vehicle.InitVehicle();
 
@@ -294,7 +294,7 @@ void renders() {
 			trans = obj->getWorldTransform();
 		glm::vec3 mov;
 		mov.x = trans.getOrigin().getX();
-		mov.y = trans.getOrigin().getY();
+		mov.y = trans.getOrigin().getY() - 0.5;
 		mov.z = trans.getOrigin().getZ();
 		model = glm::translate(glm::mat4(1.0f), mov) * model;
 		//modelShader.setMat4("model", model);
@@ -317,7 +317,7 @@ void renders() {
 		else
 			trans = obj->getWorldTransform();
 		mov.x = trans.getOrigin().getX();
-		mov.y = trans.getOrigin().getY();
+		mov.y = trans.getOrigin().getY() - 0.5;
 		mov.z = trans.getOrigin().getZ();
 		model = glm::translate(glm::mat4(1.0f), mov) * model;
 		//modelShader.setMat4("model", model);

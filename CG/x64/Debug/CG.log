@@ -1,27 +1,37 @@
 ﻿  main.cpp
-D:\github\CG-project\include\shader\Shader.h(91,36): warning C4101: “e”: 未引用的局部变量
-D:\github\CG-project\CG\Mesh.h(108,1): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
-D:\github\CG-project\CG\Vehicle.h(70,21): warning C4244: “=”: 从“double”转换到“btScalar”，可能丢失数据
-D:\github\CG-project\CG\Vehicle.h(77,25): warning C4244: “初始化”: 从“double”转换到“btScalar”，可能丢失数据
-D:\github\CG-project\CG\Vehicle.h(106,31): warning C4244: “参数”: 从“double”转换到“btScalar”，可能丢失数据
-D:\github\CG-project\CG\Utils.h(189,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\github\CG-project\CG\Utils.h(190,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\github\CG-project\CG\Utils.h(194,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\github\CG-project\CG\Utils.h(195,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\github\CG-project\CG\Utils.h(197,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\github\CG-project\CG\Utils.h(198,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
-D:\github\CG-project\CG\Utils.h(207,31): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
-D:\github\CG-project\CG\Manager.h(106,1): warning C4305: “参数”: 从“double”到“const btScalar”截断
-D:\github\CG-project\CG\Terrain.h(83,13): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-D:\github\CG-project\CG\Terrain.h(131,25): warning C4244: “参数”: 从“int”转换到“_Ty”，可能丢失数据
+F:\coding\Github Desktop\CG-project\include\shader\Shader.h(91,36): warning C4101: “e”: 未引用的局部变量
+F:\coding\Github Desktop\CG-project\CG\Mesh.h(108,1): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Vehicle.h(70,21): warning C4244: “=”: 从“double”转换到“btScalar”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Vehicle.h(77,25): warning C4244: “初始化”: 从“double”转换到“btScalar”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Vehicle.h(106,31): warning C4244: “参数”: 从“double”转换到“btScalar”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(189,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(190,17): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(194,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(195,19): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(197,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(198,13): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Utils.h(207,31): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Manager.h(106,1): warning C4305: “参数”: 从“double”到“const btScalar”截断
+F:\coding\Github Desktop\CG-project\CG\Terrain.h(83,13): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Terrain.h(131,25): warning C4244: “参数”: 从“int”转换到“_Ty”，可能丢失数据
           with
           [
               _Ty=float
           ]
-D:\github\CG-project\CG\Terrain.h(133,25): warning C4244: “参数”: 从“int”转换到“_Ty”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\Terrain.h(133,25): warning C4244: “参数”: 从“int”转换到“_Ty”，可能丢失数据
           with
           [
               _Ty=float
           ]
-D:\github\CG-project\CG\main.cpp(126,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
-  CG.vcxproj -> D:\github\CG-project\x64\Debug\Project.exe
+F:\coding\Github Desktop\CG-project\CG\main.cpp(126,22): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+F:\coding\Github Desktop\CG-project\CG\main.cpp(297,36): warning C4244: “=”: 从“double”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+F:\coding\Github Desktop\CG-project\CG\main.cpp(320,36): warning C4244: “=”: 从“double”转换到“T”，可能丢失数据
+          with
+          [
+              T=float
+          ]
+  CG.vcxproj -> F:\coding\Github Desktop\CG-project\x64\Debug\Project.exe

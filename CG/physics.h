@@ -15,7 +15,7 @@ public:
 	}
 	void ground()
 	{
-		btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(100.), btScalar(3.), btScalar(100.)));
+		btCollisionShape* groundShape = new btBoxShape(btVector3(btScalar(200.), btScalar(3.), btScalar(200.)));
 
 		phyManager->collisionShapes.push_back(groundShape);
 
@@ -40,7 +40,7 @@ public:
 		//add the body to the dynamics world
 		phyManager->dynamicsWorld->addRigidBody(body);
 	}
-	void setCube(float x, float y)
+	void setCube(float x, float y, float w)
 	{
 		// btCollisionShape* colShape = new btBoxShape(btVector3(1,1,1));
 		btCollisionShape* colShape = new btSphereShape(btScalar(1.));
@@ -51,7 +51,7 @@ public:
 		btTransform startTransform;
 		startTransform.setIdentity();
 
-		btScalar mass(10.f);
+		btScalar mass(w);
 
 		// 刚体是动态的如果且仅当质量为非零时，否则是静止的
 		bool isDynamic = (mass != 0.f);
@@ -60,12 +60,13 @@ public:
 		if (isDynamic)
 			colShape->calculateLocalInertia(mass, localInertia);
 
-		startTransform.setOrigin(btVector3(x, 10, y));
+		startTransform.setOrigin(btVector3(x, 1, y));
 
 		// 推荐使用motionstate，它提供插值功能，只同步“活动”对象
 		btDefaultMotionState* myMotionState = new btDefaultMotionState(startTransform);
 		btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 		btRigidBody* body = new btRigidBody(rbInfo);
+
 		phyManager->dynamicsWorld->addRigidBody(body);
 	}
 };
