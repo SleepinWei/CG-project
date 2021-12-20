@@ -3,8 +3,9 @@
 #include<iostream>
 #include<glfw/glfw3.h>
 #include<glm/glm.hpp>
+#include<cstdlib>
 //#include<filesystem>
-
+	
 #include"Mesh.h"
 #include"Model.h"
 #include"Camera.h"
@@ -49,8 +50,8 @@ Terrain* terrain;
 //unsigned int planeVAO;
 #endif
 void renders() {
+	srand(time(0)); 
 	glfwInit();
-
 	//create a window
 	GLFWwindow* window;
 	createWindow(window, SCR_WIDTH, SCR_HEIGHT);
@@ -151,9 +152,10 @@ void renders() {
 			ImGui::SliderFloat("Yaw", &camera.Yaw, -90.0f, 90.0f);
 			ImGui::SliderFloat("Pitch", &camera.Pitch, -90.0f, 90.0f);
 			ImGui::SliderFloat("Zoom", &camera.Zoom, 0.0f, 90.0f);
-			ImGui::SliderFloat("Vehicle_X", &vehicle.positionX, -1000.0f, 1000.0f);
-			ImGui::SliderFloat("Vehicle_Y", &vehicle.positionY, -1000.0f, 1000.0f);
-			ImGui::SliderFloat("Vehicle_Z", &vehicle.positionZ, -1000.0f, 1000.0f);
+			ImGui::Text("Vehicle");
+			ImGui::SliderFloat("X", &vehicle.positionX, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Y", &vehicle.positionY, -1000.0f, 1000.0f);
+			ImGui::SliderFloat("Z", &vehicle.positionZ, -1000.0f, 1000.0f);
 			ImGui::End();
 		}
 		ImGui::Render();
@@ -234,14 +236,15 @@ void renders() {
 		shader.setVec2("lightSize", glm::vec2(5.f, 5.f));
 		shader.setMat4("model", glm::mat4(1.0f));
 
-		glBindVertexArray(terrain->terrainVAO);
-		glEnableVertexAttribArray(0);
-		glDrawArrays(GL_TRIANGLES, 0, terrain->vertices.size() / 8);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, plane->textureID);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, shadow->depthMap);
+		glBindVertexArray(terrain->terrainVAO);
+		glEnableVertexAttribArray(0);
+		glDrawArrays(GL_TRIANGLES, 0, terrain->vertices.size() / 8);
+		
 		glBindVertexArray(plane->VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glActiveTexture(GL_TEXTURE0);

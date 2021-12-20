@@ -135,8 +135,10 @@ public:
 		vertices.push_back(normal.x);
 		vertices.push_back(normal.y);
 		vertices.push_back(normal.z);
-		vertices.push_back(0.0f);
-		vertices.push_back(0.0f);
+		//vertices.push_back(0.0f);
+		//vertices.push_back(0.0f);
+		vertices.push_back((rand() % 1024) / 1024.0f);
+		vertices.push_back((rand() % 1024) / 1024.0f);
 		//ÀÊ±„ÃÓ2ŒªŒ∆¿Ì
 	}
 
