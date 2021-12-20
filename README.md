@@ -17,16 +17,17 @@ Special thanks to my dear teammates!
 ## Plans / Progress 
 - [ ] Terrain 
     - [ ] lod system 
-    - [ ] rendering of height map  
-    - [ ] integrating into bullet3 engine 
+    - [x] rendering of height map  
+    - [x] integrating into bullet3 engine 
 - [x] Shadows (PCF,PCSS):PCSS for ortho is done. For perspective is in progress. 
 - [ ] Cascaded Shadow Mapping   
 - [ ] deferred rendering 
-- [ ] imGui 
-- [ ] 3D model 
-- [ ] Controlling 
-- [ ] Physics engine 
-- [ ] .... 
+- [x] imGui   
+- [x] 3D model   
+- [x] Controlling   
+- [x] Physics engine   
+- [x] better sky  
+- [ ] better vegetation
 ## Naming Rules 
 +   Class: 
 ```C++
