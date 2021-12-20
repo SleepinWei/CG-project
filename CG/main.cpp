@@ -108,7 +108,7 @@ void renders() {
 	physicsWorld->phyManager->collisionShapes.push_back(terrain->heightFieldShape);
 	btTransform field_trans;
 	field_trans.setIdentity();
-	field_trans.setOrigin(btVector3(5, 0, 50));
+	field_trans.setOrigin(btVector3(15, 0, -35));
 	auto motionState = new btDefaultMotionState(field_trans);
 	btScalar mass = 0.0;
 	btVector3 inertia(0, 0, 0);
