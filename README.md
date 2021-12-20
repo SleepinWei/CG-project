@@ -9,8 +9,8 @@ Special thanks to my dear teammates!
 +  zyw [@SleepinWei](https://github.com/SleepinWei) 
 +  ppz [@jinxes61](https://github.com/jinxes61)
 +  cjy [@bakacheng](https://github.com/bakacheng) 
-+  wpy @ 
-+  yht @ 
++  wpy [@wpy2200](https://github.com/wpy2200) 
++  yht [@YinHSky](https://github.com/YinHSky) 
 +  fx [@outlier-21](https://github.com/outlier-21) 
 ## Structure 
 +  shader 
